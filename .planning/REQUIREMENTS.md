@@ -14,7 +14,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **CORE-03**: Клік/тап на флешкартку розкриває приховану відповідь з плавною анімацією
 - [ ] **CORE-04**: Відповіді підтримують Markdown з підсвіткою синтаксису коду
 - [ ] **CORE-05**: 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL
-- [ ] **CORE-06**: Контент зберігається у Markdown-файлах з frontmatter метаданими
+- [x] **CORE-06**: Контент зберігається у Markdown-файлах з frontmatter метаданими
 - [ ] **CORE-07**: Якірні посилання на окремі питання (bookmark/share)
 
 ### i18n
@@ -32,9 +32,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFR-01**: Статичний сайт на Astro з деплоєм на GitHub Pages/Vercel/Netlify
-- [ ] **INFR-02**: CI/CD: пуш у git автоматично перебудовує та деплоїть сайт
-- [ ] **INFR-03**: Контент-пайплайн: Markdown → HTML build-time генерація
+- [x] **INFR-01**: Статичний сайт на Astro з деплоєм на GitHub Pages/Vercel/Netlify
+- [x] **INFR-02**: CI/CD: пуш у git автоматично перебудовує та деплоїть сайт
+- [x] **INFR-03**: Контент-пайплайн: Markdown → HTML build-time генерація
 
 ## v2 Requirements
 
@@ -75,7 +75,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CORE-03 | Phase 1 | Pending |
 | CORE-04 | Phase 1 | Pending |
 | CORE-05 | Phase 2 | Pending |
-| CORE-06 | Phase 1 | Pending |
+| CORE-06 | Phase 1 | Complete |
 | CORE-07 | Phase 1 | Pending |
 | I18N-01 | Phase 3 | Pending |
 | I18N-02 | Phase 3 | Pending |
@@ -84,9 +84,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSGN-02 | Phase 2 | Pending |
 | DSGN-03 | Phase 1 | Pending |
 | DSGN-04 | Phase 1 | Pending |
-| INFR-01 | Phase 1 | Pending |
-| INFR-02 | Phase 1 | Pending |
-| INFR-03 | Phase 1 | Pending |
+| INFR-01 | Phase 1 | Complete |
+| INFR-02 | Phase 1 | Complete |
+| INFR-03 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total
