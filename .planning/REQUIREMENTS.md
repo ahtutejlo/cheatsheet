@@ -10,12 +10,12 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Content & Core
 
 - [x] **CORE-01**: Головна сторінка відображає список усіх розділів із назвою та кількістю питань
-- [ ] **CORE-02**: Сторінка розділу відображає список питань у форматі флешкарток
-- [ ] **CORE-03**: Клік/тап на флешкартку розкриває приховану відповідь з плавною анімацією
-- [ ] **CORE-04**: Відповіді підтримують Markdown з підсвіткою синтаксису коду
+- [x] **CORE-02**: Сторінка розділу відображає список питань у форматі флешкарток
+- [x] **CORE-03**: Клік/тап на флешкартку розкриває приховану відповідь з плавною анімацією
+- [x] **CORE-04**: Відповіді підтримують Markdown з підсвіткою синтаксису коду
 - [ ] **CORE-05**: 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL
 - [x] **CORE-06**: Контент зберігається у Markdown-файлах з frontmatter метаданими
-- [ ] **CORE-07**: Якірні посилання на окремі питання (bookmark/share)
+- [x] **CORE-07**: Якірні посилання на окремі питання (bookmark/share)
 
 ### i18n
 
@@ -71,12 +71,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | CORE-01 | Phase 1 | Complete |
-| CORE-02 | Phase 1 | Pending |
-| CORE-03 | Phase 1 | Pending |
-| CORE-04 | Phase 1 | Pending |
+| CORE-02 | Phase 1 | Complete |
+| CORE-03 | Phase 1 | Complete |
+| CORE-04 | Phase 1 | Complete |
 | CORE-05 | Phase 2 | Pending |
 | CORE-06 | Phase 1 | Complete |
-| CORE-07 | Phase 1 | Pending |
+| CORE-07 | Phase 1 | Complete |
 | I18N-01 | Phase 3 | Pending |
 | I18N-02 | Phase 3 | Pending |
 | I18N-03 | Phase 3 | Pending |
