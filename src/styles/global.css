@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@import "@tailwindcss/typography";
+
+/* Dark mode for Shiki code blocks (class-based for future toggle) */
+html.dark .astro-code,
+html.dark .shiki,
+html.dark .astro-code span,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+/* Also support prefers-color-scheme for Phase 1 (no toggle yet) */
+@media (prefers-color-scheme: dark) {
+  .astro-code,
+  .shiki,
+  .astro-code span,
+  .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+}

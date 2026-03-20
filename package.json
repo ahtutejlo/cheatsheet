@@ -1,0 +1,21 @@
+{
+  "name": "cheatsheet",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.0.7",
+    "marked": "^17.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0"
+  }
+}
