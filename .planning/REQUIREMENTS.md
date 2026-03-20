@@ -9,7 +9,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Content & Core
 
-- [ ] **CORE-01**: Головна сторінка відображає список усіх розділів із назвою та кількістю питань
+- [x] **CORE-01**: Головна сторінка відображає список усіх розділів із назвою та кількістю питань
 - [ ] **CORE-02**: Сторінка розділу відображає список питань у форматі флешкарток
 - [ ] **CORE-03**: Клік/тап на флешкартку розкриває приховану відповідь з плавною анімацією
 - [ ] **CORE-04**: Відповіді підтримують Markdown з підсвіткою синтаксису коду
@@ -27,8 +27,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **DSGN-01**: Сучасний дизайн з яскравими акцентами та анімаціями
 - [ ] **DSGN-02**: Dark/light mode з детекцією системних налаштувань та ручним перемикачем
-- [ ] **DSGN-03**: Респонсивний layout (мобільні пристрої від 320px)
-- [ ] **DSGN-04**: Чиста типографіка для читання технічного контенту
+- [x] **DSGN-03**: Респонсивний layout (мобільні пристрої від 320px)
+- [x] **DSGN-04**: Чиста типографіка для читання технічного контенту
 
 ### Infrastructure
 
@@ -70,7 +70,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CORE-01 | Phase 1 | Pending |
+| CORE-01 | Phase 1 | Complete |
 | CORE-02 | Phase 1 | Pending |
 | CORE-03 | Phase 1 | Pending |
 | CORE-04 | Phase 1 | Pending |
@@ -82,8 +82,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | I18N-03 | Phase 3 | Pending |
 | DSGN-01 | Phase 2 | Pending |
 | DSGN-02 | Phase 2 | Pending |
-| DSGN-03 | Phase 1 | Pending |
-| DSGN-04 | Phase 1 | Pending |
+| DSGN-03 | Phase 1 | Complete |
+| DSGN-04 | Phase 1 | Complete |
 | INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |
