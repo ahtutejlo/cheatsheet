@@ -12,21 +12,20 @@
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Головна сторінка зі списком розділів — Validated in Phase 01
+- [x] Сторінка розділу зі списком питань-флешкарток — Validated in Phase 01
+- [x] Флешкартка: клік/тап розкриває приховану відповідь — Validated in Phase 01
+- [x] Перемикач мови UA/EN — Validated in Phase 01
+- [x] Контент зберігається у Markdown-файлах — Validated in Phase 01
+- [x] Статичний хостинг (GitHub Pages / Vercel / Netlify) — Validated in Phase 01 (CI/CD configured)
+- [x] Респонсивність (мобільні пристрої) — Validated in Phase 01
 
 ### Active
 
-- [ ] Головна сторінка зі списком розділів
-- [ ] Сторінка розділу зі списком питань-флешкарток
-- [ ] Флешкартка: клік/тап розкриває приховану відповідь
 - [ ] 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL
 - [ ] Теги для питань (фільтрація за тегами)
 - [ ] Повнотекстовий пошук по питаннях і відповідях
-- [ ] Перемикач мови UA/EN
-- [ ] Контент зберігається у Markdown-файлах
 - [ ] Сучасний дизайн з dark mode, анімаціями, яскравими акцентами
-- [ ] Статичний хостинг (GitHub Pages / Vercel / Netlify)
-- [ ] Респонсивність (мобільні пристрої)
 
 ### Out of Scope
 
@@ -60,4 +59,4 @@
 | Мультимовність UA/EN | Ширша аудиторія, підготовка до англомовних співбесід | — Pending |
 
 ---
-*Last updated: 2026-03-20 after initialization*
+*Last updated: 2026-03-20 after Phase 01 completion — content foundation, i18n, flashcard UI verified*
