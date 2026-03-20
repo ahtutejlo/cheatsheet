@@ -1,0 +1,20 @@
+---
+import Flashcard from './Flashcard.astro';
+
+interface QuestionData {
+  slug: string;
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  questions: QuestionData[];
+}
+
+const { questions } = Astro.props;
+---
+<div class="flex flex-col gap-3">
+  {questions.map(q => (
+    <Flashcard slug={q.slug} question={q.question} answer={q.answer} />
+  ))}
+</div>
