@@ -28,11 +28,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Answers render Markdown correctly including syntax-highlighted code blocks
   4. User can copy an anchor link to a specific question and share it; opening that link scrolls to and highlights that question
   5. Site is usable on mobile devices (320px+) with readable typography and no horizontal overflow
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Astro 6 project setup, content schema, sample content, CI/CD
+- [ ] 01-02-PLAN.md — Layout, i18n utils, home page with section listing
+- [ ] 01-03-PLAN.md — Section pages, flashcard UI, Markdown rendering, anchor links
 
 ### Phase 2: Design Polish and Full Content
 **Goal**: The site has a polished, modern visual identity with dark/light mode and all planned content sections populated
@@ -70,6 +71,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Content Foundation and Core Flashcard UI | 0/0 | Not started | - |
+| 1. Content Foundation and Core Flashcard UI | 0/3 | Planning complete | - |
 | 2. Design Polish and Full Content | 0/0 | Not started | - |
 | 3. Internationalization | 0/0 | Not started | - |
