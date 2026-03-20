@@ -43,11 +43,12 @@ Plans:
   1. User can toggle between dark and light mode; the site respects system preference on first visit
   2. UI has visible design polish: accent colors, smooth transitions, and modern aesthetic (not a plain default theme)
   3. All 5-7 planned sections (QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL) are present with 15+ questions each
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Dark mode toggle, design polish, accent colors, component dark variants, section registry
+- [ ] 02-02-PLAN.md — Content for QA, Automation QA, Java, Docker (15+ questions each)
+- [ ] 02-03-PLAN.md — Content for Kubernetes, Blockchain, SQL (15+ questions each)
 
 ### Phase 3: Internationalization
 **Goal**: Users can switch between Ukrainian and English, with all content and UI available in both languages
@@ -72,5 +73,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Content Foundation and Core Flashcard UI | 0/3 | Planning complete | - |
-| 2. Design Polish and Full Content | 0/0 | Not started | - |
+| 2. Design Polish and Full Content | 0/3 | Planning complete | - |
 | 3. Internationalization | 0/0 | Not started | - |
