@@ -49,14 +49,15 @@ Exceptions: none. Touch target minimum (44px on theme toggle and flashcard summa
 |------|------|--------|-------------|
 | Body | 16px (text-base) | 400 (font-normal) | 1.5 (leading-relaxed) |
 | Label | 14px (text-sm) | 400 (font-normal) | 1.5 |
-| Heading | 24px (text-2xl) on mobile, 30px (text-3xl) on sm+ | 700 (font-bold) | 1.2 |
-| Display | 30px (text-3xl) on mobile, 36px (text-4xl) on sm+ | 700 (font-bold) | 1.2 |
+| Heading | 24px (text-2xl) | 700 (font-bold) | 1.2 |
+| Display | 36px (text-4xl) | 700 (font-bold) | 1.2 |
 
 Notes:
+- No responsive font size scaling. All 4 sizes are fixed across all breakpoints.
+- Distinct pixel values: 14, 16, 24, 36 -- exactly 4.
 - Question text in flashcard summary: 16px (text-base) at weight 400 at all breakpoints. No size or weight increase on sm+.
 - Code blocks inside prose: 14px (text-sm) via `prose-pre:text-sm` (already set in Phase 1).
 - No custom fonts. System stack keeps load time zero and avoids FOUT.
-- Responsive pairs (24/30 for Heading, 30/36 for Display) count as 2 roles, not 4 sizes. Distinct size tokens used: 14, 16, 24/30, 30/36.
 - Only 2 weights used: 400 (normal) and 700 (bold). No font-medium (500).
 
 ---
