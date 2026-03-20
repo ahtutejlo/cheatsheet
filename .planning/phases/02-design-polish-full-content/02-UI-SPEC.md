@@ -39,7 +39,7 @@ Declared values (must be multiples of 4):
 | 2xl | 48px | Major section breaks, page top/bottom padding |
 | 3xl | 64px | Not used in this phase |
 
-Exceptions: Touch target minimum 44px on theme toggle button and flashcard summary (already enforced via `min-h-[44px]` in Phase 1).
+Exceptions: none. Touch target minimum (44px on theme toggle and flashcard summary) is inherited from Phase 1 via `min-h-[44px]` and is not a spacing token in this phase.
 
 ---
 
@@ -48,14 +48,16 @@ Exceptions: Touch target minimum 44px on theme toggle button and flashcard summa
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 16px (text-base) | 400 (font-normal) | 1.5 (leading-relaxed) |
-| Label | 14px (text-sm) | 500 (font-medium) | 1.5 |
+| Label | 14px (text-sm) | 400 (font-normal) | 1.5 |
 | Heading | 24px (text-2xl) on mobile, 30px (text-3xl) on sm+ | 700 (font-bold) | 1.2 |
 | Display | 30px (text-3xl) on mobile, 36px (text-4xl) on sm+ | 700 (font-bold) | 1.2 |
 
 Notes:
-- Question text in flashcard summary: 16px mobile, 18px (text-lg) on sm+ at weight 500.
+- Question text in flashcard summary: 16px (text-base) at weight 400 at all breakpoints. No size or weight increase on sm+.
 - Code blocks inside prose: 14px (text-sm) via `prose-pre:text-sm` (already set in Phase 1).
 - No custom fonts. System stack keeps load time zero and avoids FOUT.
+- Responsive pairs (24/30 for Heading, 30/36 for Display) count as 2 roles, not 4 sizes. Distinct size tokens used: 14, 16, 24/30, 30/36.
+- Only 2 weights used: 400 (normal) and 700 (bold). No font-medium (500).
 
 ---
 
@@ -105,6 +107,12 @@ Accent color is reserved for these elements only -- never used for general backg
 5. Flashcard highlight ring on anchor navigation (`box-shadow: 0 0 0 2px #3b82f6`)
 6. Section card left accent strip (new in Phase 2: 3px left border on hover)
 7. Theme toggle button hover background uses gray, not accent
+
+---
+
+## Visual Hierarchy
+
+Primary focal point: section card grid -- hero subtitle and section cards are the first visual anchors; all other elements are secondary.
 
 ---
 
