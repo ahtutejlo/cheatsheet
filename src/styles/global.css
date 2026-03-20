@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@tailwindcss/typography";
+@plugin "@tailwindcss/typography";
 
 /* Dark mode for Shiki code blocks (class-based for future toggle) */
 html.dark .astro-code,
