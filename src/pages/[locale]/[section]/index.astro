@@ -1,0 +1,101 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import FlashcardList from '../../../components/FlashcardList.astro';
+import { t, localePath, type Locale, locales } from '../../../i18n/utils';
+import { getSectionMeta, getAllSectionSlugs } from '../../../i18n/sections';
+
+export async function getStaticPaths() {
+  const sectionSlugs = getAllSectionSlugs();
+
+  return locales.flatMap(locale =>
+    sectionSlugs.map(section => ({
+      params: { locale, section },
+    }))
+  );
+}
+
+const { locale, section } = Astro.params as { locale: Locale; section: string };
+const meta = getSectionMeta(section, locale);
+
+if (!meta) {
+  return Astro.redirect(localePath(locale));
+}
+
+const allQuestions = await getCollection('questions');
+const sectionQuestions = allQuestions
+  .filter(q => q.data.section === section)
+  .sort((a, b) => a.data.order - b.data.order);
+
+// Map questions to the format Flashcard expects, selecting the correct locale
+const questionKey = `${locale}_question` as const;
+const answerKey = `${locale}_answer` as const;
+
+const questions = sectionQuestions.map(q => {
+  // Extract slug from content entry ID (e.g., "qa/what-is-testing" -> "what-is-testing")
+  const slug = q.id.split('/').pop() || q.id;
+  return {
+    slug,
+    question: (q.data as any)[questionKey] as string,
+    answer: (q.data as any)[answerKey] as string,
+  };
+});
+---
+<BaseLayout
+  title={`${meta.name} - ${t(locale, 'site.title')}`}
+  description={meta.description}
+  locale={locale}
+>
+  <Header locale={locale} />
+  <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <div class="mb-8">
+      <a href={localePath(locale)}
+         class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 mb-4 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        {t(locale, 'section.back')}
+      </a>
+      <div class="flex items-center gap-3">
+        <span class="text-3xl" role="img" aria-hidden="true">{meta.icon}</span>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">{meta.name}</h1>
+          <p class="text-gray-600 text-sm mt-1">
+            {questions.length} {t(locale, 'section.questions')}
+          </p>
+        </div>
+      </div>
+    </div>
+    <FlashcardList questions={questions} />
+  </main>
+
+  <!-- Anchor link handler: opens and scrolls to linked question -->
+  <script>
+    function handleAnchorLink() {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const target = document.getElementById(hash.slice(1));
+      if (!target) return;
+
+      // Open the details element if it's a flashcard
+      if (target.tagName === 'DETAILS') {
+        (target as HTMLDetailsElement).open = true;
+      }
+
+      // Scroll to target with a short delay to allow details to open
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.classList.add('highlight');
+        setTimeout(() => target.classList.remove('highlight'), 2000);
+      }, 100);
+    }
+
+    // Handle initial page load
+    handleAnchorLink();
+
+    // Handle hash changes (clicking anchor links on the same page)
+    window.addEventListener('hashchange', handleAnchorLink);
+  </script>
+</BaseLayout>
