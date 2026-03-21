@@ -22,10 +22,10 @@
 
 ### Active
 
-- [ ] 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL
+- [x] 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL — Validated in Phase 02
 - [ ] Теги для питань (фільтрація за тегами)
 - [ ] Повнотекстовий пошук по питаннях і відповідях
-- [ ] Сучасний дизайн з dark mode, анімаціями, яскравими акцентами
+- [x] Сучасний дизайн з dark mode, анімаціями, яскравими акцентами — Validated in Phase 02
 
 ### Out of Scope
 
@@ -59,4 +59,4 @@
 | Мультимовність UA/EN | Ширша аудиторія, підготовка до англомовних співбесід | — Pending |
 
 ---
-*Last updated: 2026-03-20 after Phase 01 completion — content foundation, i18n, flashcard UI verified*
+*Last updated: 2026-03-21 after Phase 02 completion — dark/light mode, design polish, 7 sections with 15+ questions each*
