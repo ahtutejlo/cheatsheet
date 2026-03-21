@@ -26,7 +26,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Milestone Goal:** Add 90 advanced questions (deep-technical, trick, practical) to 6 sections with type-based UI grouping and search
 
-- [ ] **Phase 4: Infrastructure and UI** - Schema type field, Shiki language fixes, content conventions, type badges, and visual grouping
+- [x] **Phase 4: Infrastructure and UI** - Schema type field, Shiki language fixes, content conventions, type badges, and visual grouping (completed 2026-03-21)
 - [ ] **Phase 5: Content Generation** - 90 bilingual advanced questions across 6 sections (15 per section)
 - [ ] **Phase 6: Search and Filter** - Full-text search via Pagefind and tag-based filtering
 
@@ -42,7 +42,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Each flashcard shows a colored type badge (Deep / Trick / Practical) when the question has a non-basic type
   4. Questions on a section page are visually grouped by type (Basic, then Deep, then Trick, then Practical) with a count per type visible
   5. A content conventions document exists that defines the structure for each question type (Trap callout for tricks, Scenario/Approach/Solution for practicals)
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 04-01-PLAN.md — Schema type field, Shiki solidity/python, i18n keys, content conventions doc
@@ -87,6 +87,6 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 1. Content Foundation and Core Flashcard UI | v1.0 | 3/3 | Complete | 2026-03-20 |
 | 2. Design Polish and Full Content | v1.0 | 3/3 | Complete | 2026-03-21 |
 | 3. Internationalization | v1.0 | 1/1 | Complete | 2026-03-21 |
-| 4. Infrastructure and UI | v1.1 | 0/2 | Not started | - |
+| 4. Infrastructure and UI | 2/2 | Complete   | 2026-03-21 | - |
 | 5. Content Generation | v1.1 | 0/? | Not started | - |
 | 6. Search and Filter | v1.1 | 0/? | Not started | - |

@@ -15,9 +15,9 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 
 ### UI
 
-- [ ] **UI-01**: Користувач бачить type badge (Deep / Trick / Practical) на кожній flashcard
-- [ ] **UI-02**: Питання згруповані по типах на сторінці розділу (Basic → Deep → Trick → Practical)
-- [ ] **UI-03**: Користувач бачить кількість питань по типах на сторінці розділу
+- [x] **UI-01**: Користувач бачить type badge (Deep / Trick / Practical) на кожній flashcard
+- [x] **UI-02**: Питання згруповані по типах на сторінці розділу (Basic → Deep → Trick → Practical)
+- [x] **UI-03**: Користувач бачить кількість питань по типах на сторінці розділу
 
 ### Content — Automation QA
 
@@ -85,9 +85,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-01 | Phase 4 | Complete |
 | INFRA-02 | Phase 4 | Complete |
 | INFRA-03 | Phase 4 | Complete |
-| UI-01 | Phase 4 | Pending |
-| UI-02 | Phase 4 | Pending |
-| UI-03 | Phase 4 | Pending |
+| UI-01 | Phase 4 | Complete |
+| UI-02 | Phase 4 | Complete |
+| UI-03 | Phase 4 | Complete |
 | CONT-01 | Phase 5 | Pending |
 | CONT-02 | Phase 5 | Pending |
 | CONT-03 | Phase 5 | Pending |
