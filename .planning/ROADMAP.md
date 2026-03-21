@@ -59,11 +59,10 @@ Plans:
   2. Switching language shows the same section/question content translated into the selected language
   3. All UI elements (navigation, buttons, labels, headings) display in the selected language
   4. Language preference persists across page navigation within the same session
-**Plans**: TBD
+**Plans:** 1 plan
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — Language toggle in Header, localStorage persistence, root redirect update
 
 ## Progress
 
@@ -74,4 +73,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Content Foundation and Core Flashcard UI | 0/3 | Planning complete | - |
 | 2. Design Polish and Full Content | 0/3 | Planning complete | - |
-| 3. Internationalization | 0/0 | Not started | - |
+| 3. Internationalization | 0/1 | Planning complete | - |
