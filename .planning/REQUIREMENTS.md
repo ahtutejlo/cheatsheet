@@ -1,0 +1,119 @@
+# Requirements: Interview Cheatsheet
+
+**Defined:** 2026-03-21
+**Core Value:** Будь-хто може швидко знайти та повторити ключові питання і відповіді для підготовки до технічної співбесіди з потрібної теми.
+
+## v1.1 Requirements
+
+Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
+
+### Infrastructure
+
+- [ ] **INFRA-01**: Schema має підтримувати поле type (basic/deep/trick/practical) з default('basic')
+- [ ] **INFRA-02**: Shiki підсвічує solidity та python код у відповідях
+- [ ] **INFRA-03**: Документ content conventions визначає структуру для кожного типу питань
+
+### UI
+
+- [ ] **UI-01**: Користувач бачить type badge (Deep / Trick / Practical) на кожній flashcard
+- [ ] **UI-02**: Питання згруповані по типах на сторінці розділу (Basic → Deep → Trick → Practical)
+- [ ] **UI-03**: Користувач бачить кількість питань по типах на сторінці розділу
+
+### Content — Automation QA
+
+- [ ] **CONT-01**: 5 глибоких технічних питань для Automation QA (білінгвальні UA/EN)
+- [ ] **CONT-02**: 5 питань-пасток для Automation QA (білінгвальні UA/EN)
+- [ ] **CONT-03**: 5 практичних задач для Automation QA (білінгвальні UA/EN)
+
+### Content — Java
+
+- [ ] **CONT-04**: 5 глибоких технічних питань для Java (білінгвальні UA/EN)
+- [ ] **CONT-05**: 5 питань-пасток для Java (білінгвальні UA/EN)
+- [ ] **CONT-06**: 5 практичних задач для Java (білінгвальні UA/EN)
+
+### Content — Kubernetes
+
+- [ ] **CONT-07**: 5 глибоких технічних питань для Kubernetes (білінгвальні UA/EN)
+- [ ] **CONT-08**: 5 питань-пасток для Kubernetes (білінгвальні UA/EN)
+- [ ] **CONT-09**: 5 практичних задач для Kubernetes (білінгвальні UA/EN)
+
+### Content — Blockchain
+
+- [ ] **CONT-10**: 5 глибоких технічних питань для Blockchain (білінгвальні UA/EN)
+- [ ] **CONT-11**: 5 питань-пасток для Blockchain (білінгвальні UA/EN)
+- [ ] **CONT-12**: 5 практичних задач для Blockchain (білінгвальні UA/EN)
+
+### Content — Docker
+
+- [ ] **CONT-13**: 5 глибоких технічних питань для Docker (білінгвальні UA/EN)
+- [ ] **CONT-14**: 5 питань-пасток для Docker (білінгвальні UA/EN)
+- [ ] **CONT-15**: 5 практичних задач для Docker (білінгвальні UA/EN)
+
+### Content — SQL
+
+- [ ] **CONT-16**: 5 глибоких технічних питань для SQL (білінгвальні UA/EN)
+- [ ] **CONT-17**: 5 питань-пасток для SQL (білінгвальні UA/EN)
+- [ ] **CONT-18**: 5 практичних задач для SQL (білінгвальні UA/EN)
+
+### Search & Filter
+
+- [ ] **SRCH-01**: Користувач може шукати по всіх питаннях і відповідях (Pagefind)
+- [ ] **SRCH-02**: Користувач може фільтрувати питання за тегами
+
+## Future Requirements
+
+### Content Expansion
+
+- **CONT-19**: Додати advanced питання для розділу QA
+- **CONT-20**: Нові розділи (CI/CD, Git, Linux, Networks)
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Рівні складності (Junior/Middle/Senior) | Типи питань (deep/trick/practical) вже дають структуру |
+| Тестовий режим з варіантами відповідей | Залишаємо формат flashcards |
+| Інтерактивні code playgrounds | Складність реалізації, статичний сайт |
+| AI-генерація питань on-the-fly | Контент генерується офлайн, зберігається у Markdown |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| INFRA-01 | — | Pending |
+| INFRA-02 | — | Pending |
+| INFRA-03 | — | Pending |
+| UI-01 | — | Pending |
+| UI-02 | — | Pending |
+| UI-03 | — | Pending |
+| CONT-01 | — | Pending |
+| CONT-02 | — | Pending |
+| CONT-03 | — | Pending |
+| CONT-04 | — | Pending |
+| CONT-05 | — | Pending |
+| CONT-06 | — | Pending |
+| CONT-07 | — | Pending |
+| CONT-08 | — | Pending |
+| CONT-09 | — | Pending |
+| CONT-10 | — | Pending |
+| CONT-11 | — | Pending |
+| CONT-12 | — | Pending |
+| CONT-13 | — | Pending |
+| CONT-14 | — | Pending |
+| CONT-15 | — | Pending |
+| CONT-16 | — | Pending |
+| CONT-17 | — | Pending |
+| CONT-18 | — | Pending |
+| SRCH-01 | — | Pending |
+| SRCH-02 | — | Pending |
+
+**Coverage:**
+- v1.1 requirements: 24 total
+- Mapped to phases: 0
+- Unmapped: 24 ⚠️
+
+---
+*Requirements defined: 2026-03-21*
+*Last updated: 2026-03-21 after initial definition*
