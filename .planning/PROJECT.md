@@ -2,31 +2,46 @@
 
 ## What This Is
 
-Публічний статичний сайт для підготовки до технічних співбесід. Питання організовані по розділах (QA, Automation QA, Java, Kubernetes, Blockchain тощо) у форматі флешкарток — клік розкриває відповідь. Підтримує UA/EN, теги, повнотекстовий пошук. Контент зберігається у Markdown-файлах і генерується за допомогою AI.
+Публічний статичний сайт для підготовки до технічних співбесід. 105 питань у 7 розділах (QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL) у форматі флешкарток — клік розкриває відповідь. Двомовний (UA/EN) з перемикачем мови, dark/light mode, підсвітка синтаксису коду. Контент зберігається у Markdown-файлах і генерується за допомогою AI.
 
 ## Core Value
 
 Будь-хто може швидко знайти та повторити ключові питання і відповіді для підготовки до технічної співбесіди з потрібної теми.
 
+## Current State
+
+**Shipped:** v1.0 (2026-03-21)
+**Live:** GitHub Pages via CI/CD (push to main → auto deploy)
+**Stack:** Astro 6, Tailwind CSS 4, Shiki, GitHub Actions
+**Content:** 105 bilingual flashcards across 7 sections (15 per section)
+**Source:** 567 LOC (Astro/TS/CSS)
+
 ## Requirements
 
 ### Validated
 
-- [x] Головна сторінка зі списком розділів — Validated in Phase 01
-- [x] Сторінка розділу зі списком питань-флешкарток — Validated in Phase 01
-- [x] Флешкартка: клік/тап розкриває приховану відповідь — Validated in Phase 01
-- [x] Перемикач мови UA/EN — Validated in Phase 01
-- [x] Контент зберігається у Markdown-файлах — Validated in Phase 01
-- [x] Статичний хостинг (GitHub Pages / Vercel / Netlify) — Validated in Phase 01 (CI/CD configured)
-- [x] Респонсивність (мобільні пристрої) — Validated in Phase 01
+- ✓ Головна сторінка зі списком розділів — v1.0
+- ✓ Сторінка розділу зі списком питань-флешкарток — v1.0
+- ✓ Флешкартка: клік/тап розкриває приховану відповідь — v1.0
+- ✓ Відповіді підтримують Markdown з підсвіткою синтаксису — v1.0
+- ✓ 7 розділів: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL — v1.0
+- ✓ Контент зберігається у Markdown-файлах — v1.0
+- ✓ Якірні посилання на окремі питання — v1.0
+- ✓ Перемикач мови UA/EN з localStorage persistence — v1.0
+- ✓ Кожне питання має версію UA та EN — v1.0
+- ✓ UI елементи перекладені на обидві мови — v1.0
+- ✓ Сучасний дизайн з яскравими акцентами та анімаціями — v1.0
+- ✓ Dark/light mode з детекцією системних налаштувань — v1.0
+- ✓ Респонсивний layout (320px+) — v1.0
+- ✓ Чиста типографіка для технічного контенту — v1.0
+- ✓ Статичний сайт на Astro з деплоєм на GitHub Pages — v1.0
+- ✓ CI/CD: пуш в git → перебудова та деплой — v1.0
+- ✓ Контент-пайплайн: Markdown → HTML build-time генерація — v1.0
 
 ### Active
 
-- [x] 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL — Validated in Phase 02
-- [x] Перемикач мови UA/EN з localStorage persistence — Validated in Phase 03
 - [ ] Теги для питань (фільтрація за тегами)
-- [ ] Повнотекстовий пошук по питаннях і відповідях
-- [x] Сучасний дизайн з dark mode, анімаціями, яскравими акцентами — Validated in Phase 02
+- [ ] Повнотекстовий пошук по питаннях і відповідях (Pagefind)
 
 ### Out of Scope
 
@@ -35,6 +50,7 @@
 - Рівні складності (Junior/Middle/Senior) — всі питання в одному списку
 - Тестовий режим з варіантами відповідей — тільки флешкартки
 - Бекенд/база даних — повністю статичний сайт
+- Offline mode — сайт-шпаргалка, не PWA
 
 ## Context
 
@@ -42,22 +58,31 @@
 - Пуш в git автоматично оновлює сайт (CI/CD)
 - Цільова аудиторія: розробники та QA-інженери, що готуються до співбесід
 - Мультимовність: кожне питання має версію українською та англійською
-- Дизайн має бути реалізований через frontend-design скіл для високої якості UI
+- Co-located content: одне питання = один файл з обома мовами (ua_question/en_question)
 
 ## Constraints
 
 - **Hosting**: Статичний сайт — без серверної логіки, все на клієнті
 - **Content format**: Markdown файли — простий workflow для додавання контенту
-- **Budget**: Безкоштовний хостинг (GitHub Pages / Vercel / Netlify)
+- **Budget**: Безкоштовний хостинг (GitHub Pages)
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Статичний сайт замість full-stack | Безкоштовний хостинг, швидкість, простота деплою | — Pending |
-| Markdown як джерело контенту | Простий workflow: написав → запушив → сайт оновився | — Pending |
-| Флешкартки замість тестів | Простіше реалізувати, ефективніше для повторення | — Pending |
-| Мультимовність UA/EN | Ширша аудиторія, підготовка до англомовних співбесід | — Pending |
+| Статичний сайт замість full-stack | Безкоштовний хостинг, швидкість, простота деплою | ✓ Good |
+| Markdown як джерело контенту | Простий workflow: написав → запушив → сайт оновився | ✓ Good |
+| Флешкартки замість тестів | Простіше реалізувати, ефективніше для повторення | ✓ Good |
+| Мультимовність UA/EN | Ширша аудиторія, підготовка до англомовних співбесід | ✓ Good |
+| Co-located content (одне питання = один файл) | Запобігає drift між перекладами | ✓ Good |
+| Native details/summary для flashcard | Працює без JS, просте, доступне | ✓ Good |
+| Astro 6 + Tailwind CSS 4 | Найсучасніший стек, швидкий build | ✓ Good |
+| Shiki dual-theme highlighting | Підсвітка коду працює в обох темах без перезавантаження | ✓ Good |
+| localStorage для теми та мови | Простий persistence без бекенду | ✓ Good |
+
+## Known Tech Debt
+
+- Solidity code blocks у blockchain секції не мають підсвітки синтаксису (потрібно додати 'solidity' до langs array)
 
 ---
-*Last updated: 2026-03-21 after Phase 03 completion — language toggle UI with localStorage persistence, root redirect respects stored locale*
+*Last updated: 2026-03-21 after v1.0 milestone*
