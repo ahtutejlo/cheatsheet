@@ -9,9 +9,9 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 
 ### Infrastructure
 
-- [ ] **INFRA-01**: Schema має підтримувати поле type (basic/deep/trick/practical) з default('basic')
-- [ ] **INFRA-02**: Shiki підсвічує solidity та python код у відповідях
-- [ ] **INFRA-03**: Документ content conventions визначає структуру для кожного типу питань
+- [x] **INFRA-01**: Schema має підтримувати поле type (basic/deep/trick/practical) з default('basic')
+- [x] **INFRA-02**: Shiki підсвічує solidity та python код у відповідях
+- [x] **INFRA-03**: Документ content conventions визначає структуру для кожного типу питань
 
 ### UI
 
@@ -82,9 +82,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 4 | Pending |
-| INFRA-02 | Phase 4 | Pending |
-| INFRA-03 | Phase 4 | Pending |
+| INFRA-01 | Phase 4 | Complete |
+| INFRA-02 | Phase 4 | Complete |
+| INFRA-03 | Phase 4 | Complete |
 | UI-01 | Phase 4 | Pending |
 | UI-02 | Phase 4 | Pending |
 | UI-03 | Phase 4 | Pending |
