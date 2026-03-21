@@ -11,6 +11,7 @@ const questions = defineCollection({
     section: z.string(),
     order: z.number(),
     tags: z.array(z.string()).default([]),
+    type: z.enum(['basic', 'deep', 'trick', 'practical']).default('basic'),
   }),
 });
 

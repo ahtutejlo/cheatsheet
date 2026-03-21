@@ -13,6 +13,13 @@ export const ui = {
     'section.empty.body': 'Цей розділ ще наповнюється. Поверніться пізніше.',
     'lang.switch': 'EN',
     'lang.label': 'Switch to English',
+    'type.deep': 'Глибоке',
+    'type.trick': 'Пастка',
+    'type.practical': 'Практичне',
+    'group.basic': 'Базові',
+    'group.deep': 'Глибокі технічні',
+    'group.trick': 'Питання-пастки',
+    'group.practical': 'Практичні задачі',
   },
   en: {
     'site.title': 'Interview Cheatsheet',
@@ -28,6 +35,13 @@ export const ui = {
     'section.empty.body': 'This section is being populated. Check back soon.',
     'lang.switch': 'UA',
     'lang.label': 'Переключити на українську',
+    'type.deep': 'Deep',
+    'type.trick': 'Trick',
+    'type.practical': 'Practical',
+    'group.basic': 'Basic',
+    'group.deep': 'Deep Technical',
+    'group.trick': 'Trick Questions',
+    'group.practical': 'Practical Scenarios',
   },
 } as const;
 
