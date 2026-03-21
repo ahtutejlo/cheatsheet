@@ -19,6 +19,22 @@ export const sections: Record<string, Record<Locale, SectionMeta>> = {
     ua: { name: 'Docker', description: 'Контейнеризація та Docker', icon: '🐳' },
     en: { name: 'Docker', description: 'Containerization and Docker', icon: '🐳' },
   },
+  'automation-qa': {
+    ua: { name: 'Automation QA', description: 'Автоматизоване тестування', icon: '🤖' },
+    en: { name: 'Automation QA', description: 'Test automation fundamentals', icon: '🤖' },
+  },
+  kubernetes: {
+    ua: { name: 'Kubernetes', description: 'Оркестрація контейнерів', icon: '☸️' },
+    en: { name: 'Kubernetes', description: 'Container orchestration', icon: '☸️' },
+  },
+  blockchain: {
+    ua: { name: 'Blockchain', description: 'Технологія блокчейн', icon: '🔗' },
+    en: { name: 'Blockchain', description: 'Blockchain technology', icon: '🔗' },
+  },
+  sql: {
+    ua: { name: 'SQL', description: 'Мова запитів до баз даних', icon: '🗃️' },
+    en: { name: 'SQL', description: 'Database query language', icon: '🗃️' },
+  },
 };
 
 export function getSectionMeta(slug: string, locale: Locale): SectionMeta | undefined {

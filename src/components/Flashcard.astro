@@ -10,13 +10,13 @@ interface Props {
 const { slug, question, answer } = Astro.props;
 const answerHtml = await renderMarkdown(answer);
 ---
-<details class="flashcard group border border-gray-200 rounded-lg overflow-hidden" id={slug}>
-  <summary class="cursor-pointer select-none p-4 sm:p-5 font-medium text-gray-900
-                   hover:bg-gray-50 transition-colors
+<details class="flashcard group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden" id={slug}>
+  <summary class="cursor-pointer select-none p-4 sm:p-5 font-medium text-gray-900 dark:text-gray-100
+                   hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
                    min-h-[44px] flex items-center gap-3 list-none">
-    <span class="flex-1 text-base sm:text-lg leading-relaxed">{question}</span>
+    <span class="flex-1 text-base leading-relaxed">{question}</span>
     <a href={`#${slug}`}
-       class="text-gray-300 hover:text-blue-500 transition-colors shrink-0"
+       class="text-gray-300 dark:text-gray-600 hover:text-blue-500 dark:hover:text-blue-400 transition-colors shrink-0"
        onclick="event.stopPropagation()"
        aria-label="Link to this question">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -24,16 +24,17 @@ const answerHtml = await renderMarkdown(answer);
               d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-1.102-4.242a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.1-1.1" />
       </svg>
     </a>
-    <svg class="w-5 h-5 text-gray-400 transition-transform duration-200 group-open:rotate-180 shrink-0"
+    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform duration-200 group-open:rotate-180 shrink-0"
          viewBox="0 0 20 20" fill="currentColor">
       <path fill-rule="evenodd"
             d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
             clip-rule="evenodd" />
     </svg>
   </summary>
-  <div class="flashcard-answer border-t border-gray-200 p-4 sm:p-5
-              prose prose-sm sm:prose-base max-w-none
+  <div class="flashcard-answer border-t border-gray-200 dark:border-gray-700 p-4 sm:p-5
+              prose prose-sm sm:prose-base max-w-none dark:prose-invert
               prose-pre:bg-gray-100 prose-pre:border prose-pre:border-gray-200
+              dark:prose-pre:bg-gray-800 dark:prose-pre:border-gray-700
               prose-pre:rounded-lg prose-pre:text-sm
               prose-code:before:content-none prose-code:after:content-none">
     <Fragment set:html={answerHtml} />
@@ -64,5 +65,9 @@ const answerHtml = await renderMarkdown(answer);
      override prose-pre background so Shiki themes show through */
   .flashcard-answer :global(pre.shiki) {
     background-color: var(--shiki-light-bg, #fff) !important;
+  }
+
+  html.dark .flashcard-answer :global(pre.shiki) {
+    background-color: var(--shiki-dark-bg, #1e1e1e) !important;
   }
 </style>

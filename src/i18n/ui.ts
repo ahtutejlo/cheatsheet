@@ -8,6 +8,9 @@ export const ui = {
     'section.back': 'Назад до розділів',
     'flashcard.show': 'Показати відповідь',
     'nav.home': 'Головна',
+    'theme.toggle': 'Перемкнути тему',
+    'section.empty.title': 'Питань поки немає',
+    'section.empty.body': 'Цей розділ ще наповнюється. Поверніться пізніше.',
   },
   en: {
     'site.title': 'Interview Cheatsheet',
@@ -18,6 +21,9 @@ export const ui = {
     'section.back': 'Back to sections',
     'flashcard.show': 'Show answer',
     'nav.home': 'Home',
+    'theme.toggle': 'Toggle dark mode',
+    'section.empty.title': 'No questions yet',
+    'section.empty.body': 'This section is being populated. Check back soon.',
   },
 } as const;
 

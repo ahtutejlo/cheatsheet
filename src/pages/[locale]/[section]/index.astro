@@ -51,7 +51,7 @@ const questions = sectionQuestions.map(q => {
   <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <div class="mb-8">
       <a href={localePath(locale)}
-         class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 mb-4 transition-colors">
+         class="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4 transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -60,8 +60,8 @@ const questions = sectionQuestions.map(q => {
       <div class="flex items-center gap-3">
         <span class="text-3xl" role="img" aria-hidden="true">{meta.icon}</span>
         <div>
-          <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">{meta.name}</h1>
-          <p class="text-gray-600 text-sm mt-1">
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">{meta.name}</h1>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
             {questions.length} {t(locale, 'section.questions')}
           </p>
         </div>
