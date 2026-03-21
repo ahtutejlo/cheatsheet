@@ -25,8 +25,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Design
 
-- [ ] **DSGN-01**: Сучасний дизайн з яскравими акцентами та анімаціями
-- [ ] **DSGN-02**: Dark/light mode з детекцією системних налаштувань та ручним перемикачем
+- [x] **DSGN-01**: Сучасний дизайн з яскравими акцентами та анімаціями
+- [x] **DSGN-02**: Dark/light mode з детекцією системних налаштувань та ручним перемикачем
 - [x] **DSGN-03**: Респонсивний layout (мобільні пристрої від 320px)
 - [x] **DSGN-04**: Чиста типографіка для читання технічного контенту
 
@@ -80,8 +80,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | I18N-01 | Phase 3 | Pending |
 | I18N-02 | Phase 3 | Pending |
 | I18N-03 | Phase 3 | Pending |
-| DSGN-01 | Phase 2 | Pending |
-| DSGN-02 | Phase 2 | Pending |
+| DSGN-01 | Phase 2 | Complete |
+| DSGN-02 | Phase 2 | Complete |
 | DSGN-03 | Phase 1 | Complete |
 | DSGN-04 | Phase 1 | Complete |
 | INFR-01 | Phase 1 | Complete |
