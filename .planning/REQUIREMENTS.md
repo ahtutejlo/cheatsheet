@@ -82,38 +82,38 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
-| UI-01 | — | Pending |
-| UI-02 | — | Pending |
-| UI-03 | — | Pending |
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
-| CONT-04 | — | Pending |
-| CONT-05 | — | Pending |
-| CONT-06 | — | Pending |
-| CONT-07 | — | Pending |
-| CONT-08 | — | Pending |
-| CONT-09 | — | Pending |
-| CONT-10 | — | Pending |
-| CONT-11 | — | Pending |
-| CONT-12 | — | Pending |
-| CONT-13 | — | Pending |
-| CONT-14 | — | Pending |
-| CONT-15 | — | Pending |
-| CONT-16 | — | Pending |
-| CONT-17 | — | Pending |
-| CONT-18 | — | Pending |
-| SRCH-01 | — | Pending |
-| SRCH-02 | — | Pending |
+| INFRA-01 | Phase 4 | Pending |
+| INFRA-02 | Phase 4 | Pending |
+| INFRA-03 | Phase 4 | Pending |
+| UI-01 | Phase 4 | Pending |
+| UI-02 | Phase 4 | Pending |
+| UI-03 | Phase 4 | Pending |
+| CONT-01 | Phase 5 | Pending |
+| CONT-02 | Phase 5 | Pending |
+| CONT-03 | Phase 5 | Pending |
+| CONT-04 | Phase 5 | Pending |
+| CONT-05 | Phase 5 | Pending |
+| CONT-06 | Phase 5 | Pending |
+| CONT-07 | Phase 5 | Pending |
+| CONT-08 | Phase 5 | Pending |
+| CONT-09 | Phase 5 | Pending |
+| CONT-10 | Phase 5 | Pending |
+| CONT-11 | Phase 5 | Pending |
+| CONT-12 | Phase 5 | Pending |
+| CONT-13 | Phase 5 | Pending |
+| CONT-14 | Phase 5 | Pending |
+| CONT-15 | Phase 5 | Pending |
+| CONT-16 | Phase 5 | Pending |
+| CONT-17 | Phase 5 | Pending |
+| CONT-18 | Phase 5 | Pending |
+| SRCH-01 | Phase 6 | Pending |
+| SRCH-02 | Phase 6 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 24 total
-- Mapped to phases: 0
-- Unmapped: 24 ⚠️
+- Mapped to phases: 24
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-21*
-*Last updated: 2026-03-21 after initial definition*
+*Last updated: 2026-03-21 after roadmap creation*
