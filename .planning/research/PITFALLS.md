@@ -1,236 +1,141 @@
 # Pitfalls Research
 
-**Domain:** Interview Q&A cheatsheet static site (flashcard-style, Markdown content, UA/EN i18n, client-side search, tag filtering)
-**Researched:** 2026-03-20
-**Confidence:** HIGH (most pitfalls are well-documented in static site and i18n communities)
+**Domain:** Adding 90 advanced bilingual interview questions to an existing Astro 6 static site
+**Researched:** 2026-03-21
+**Confidence:** HIGH (based on direct codebase analysis of existing content pipeline, schema, and rendering)
 
 ## Critical Pitfalls
 
-### Pitfall 1: Translation Drift -- UA/EN Content Going Out of Sync
+### Pitfall 1: YAML Frontmatter Breakage in Bilingual Multiline Content
 
 **What goes wrong:**
-Ukrainian and English versions of the same question diverge silently. A question gets updated in one language but not the other. New questions get added to one language only. Over time, the two language versions become different products with different content coverage.
+The content schema requires `ua_question`, `en_question`, `ua_answer`, `en_answer` as YAML frontmatter fields using block scalar syntax (`|`). Advanced questions contain colons, quotes, backticks, triple-backtick code blocks, and Ukrainian special characters inside YAML values. Any YAML syntax error in a single file breaks the entire Astro build -- not just that question -- because the glob loader validates all files in the collection at once via the Zod schema in `src/content.config.ts`.
 
 **Why it happens:**
-Markdown-based bilingual content has no built-in mechanism to detect when one language version changes without updating the other. AI-generated content makes this worse because bulk generation in one language is easy, but keeping the other in sync requires deliberate effort. Git diffs show file changes but not cross-language consistency.
+AI-generated content frequently produces unescaped YAML special characters. A colon followed by a space inside a value, an unindented line in a multiline block, or a tab character all corrupt YAML parsing. With 90 files x 4 multiline fields each (360 field values total), even a 1% error rate means 3-4 broken files per batch. Triple-backtick code blocks inside YAML block scalars are especially fragile -- the backticks must be properly indented within the YAML block.
 
 **How to avoid:**
-- Store both languages in the same Markdown file (e.g., frontmatter with `question_ua`, `question_en`, `answer_ua`, `answer_en`) rather than separate files per language. This makes it structurally impossible to update one without seeing the other.
-- If using separate files per language, implement a build-time validation script that compares file lists and frontmatter `lastUpdated` timestamps across locales.
-- Add a CI check that flags any PR where a content file is modified in one locale directory but not the corresponding file in the other.
+- Always use YAML block scalar syntax (`|`) for all answer and question fields, never inline strings.
+- Ensure consistent 2-space indentation for all content within block scalars.
+- Validate every generated file before committing: parse YAML and check against the Zod schema.
+- Generate a small batch (3-5 files), run `astro build`, verify. Then scale up.
+- Watch specifically for: tabs (must be spaces), bare `---` inside answer content (conflicts with YAML document separators), and unindented lines breaking out of block scalars.
 
 **Warning signs:**
-- Sections have different question counts between UA and EN
-- PRs that touch content files in only one language directory
-- Users reporting "this question exists in Ukrainian but not English"
+`astro build` fails with cryptic YAML parse errors. Error messages may point to line numbers but not clearly identify the offending file among 90+ new files.
 
 **Phase to address:**
-Phase 1 (Content Structure). The file format decision must be made before any content is written. Retrofitting from separate files to co-located content is a painful migration.
+Content generation phase -- build validation into the generation workflow before any bulk content creation.
 
 ---
 
-### Pitfall 2: Client-Side Search Index Bloat with Bilingual Content
+### Pitfall 2: Order Number Collisions Within Sections
 
 **What goes wrong:**
-The search index JSON file that gets shipped to the browser becomes massive because it contains the full text of every question and answer in both languages. With 7 sections, each having 30-50 questions with multi-paragraph answers in two languages, the index can easily exceed 2-3 MB. Users on mobile or slow connections experience a sluggish or unusable search.
+Each section currently has 15 questions numbered `order: 1` through `order: 15`. Adding 15 new questions per section requires `order: 16` through `order: 30`. If AI generates files with order numbers that collide with existing ones (starting from 1, or using arbitrary numbers), two questions with the same order in one section produce unpredictable sort order because the sort in `src/pages/[locale]/[section]/index.astro` uses `.sort((a, b) => a.data.order - b.data.order)` which is unstable for equal values.
 
 **Why it happens:**
-Most client-side search tutorials show indexing small blogs with short posts. Interview Q&A content is dense -- answers include code examples, explanations, and lists. Doubling it for two languages makes the problem acute. Developers test on localhost with instant loads and never notice.
+Content generated in separate AI sessions loses track of existing numbering. Each batch may restart numbering from 1 or use gaps. With 6 sections x 15 new questions, the probability of at least one collision is high without explicit tracking.
 
 **How to avoid:**
-- Pre-build the search index at build time (not runtime in the browser). Both FlexSearch and Lunr support serialized pre-built indexes.
-- Create separate indexes per language. Only load the index for the currently active language.
-- Index only questions and truncated answer previews (first 200 chars), not full answer text. Use the index for finding matches, then show the full content from the page.
-- Lazy-load the search index on first interaction with the search input, not on page load.
-- Set a budget: if the index exceeds 500KB per language, revisit what is being indexed.
+- Before generating content for any section, check existing order numbers: `grep "^order:" src/content/questions/{section}/*.md | sort -t: -k3 -n`.
+- Assign order numbers explicitly in the generation prompt: "Use order 16 through 30 for this section."
+- Add a build-time validation script that checks for duplicate `order` values within each section and fails the build if found.
 
 **Warning signs:**
-- Search index JSON file growing beyond 500KB per language
-- Noticeable delay (>500ms) when performing first search
-- Lighthouse performance score drops after adding search
-- Testing only on fast connections / powerful devices
+Questions appearing in wrong order on section pages. New questions interspersed randomly with existing ones instead of appearing after them.
 
 **Phase to address:**
-Phase 2 (Search Implementation). But the content structure from Phase 1 must support efficient index generation -- extracting question text separately from answer text.
+Content preparation phase -- establish numbering convention and validate before creating any files.
 
 ---
 
-### Pitfall 3: FlexSearch Cyrillic/Ukrainian Text Handling Broken by Default
+### Pitfall 3: Shiki Language Registration Gaps for Advanced Content
 
 **What goes wrong:**
-FlexSearch's default character encoding is Latin-centric. Ukrainian (Cyrillic) text returns zero results when searched. The documented workaround (`encode: false, split: /\s+/`) fixes Cyrillic but breaks Latin search, making mixed-language content (e.g., "Docker" in a Ukrainian answer) unsearchable.
+The custom `renderMarkdown()` function in `src/lib/markdown.ts` initializes Shiki with a fixed language list: `['java', 'javascript', 'typescript', 'sql', 'bash', 'yaml', 'json', 'dockerfile']`. Advanced questions will introduce code blocks in languages not on this list. Already broken: `solidity` (4 existing blocks in blockchain section) and `gherkin` (2 existing blocks in automation-qa section -- used in BDD/Cucumber content). Advanced questions will likely need: `python`, `kotlin`, `groovy` (Automation QA), `go` (Kubernetes), `xml` (Java/Spring), `toml` (Docker Compose v2).
+
+The `codeToHtml()` call has a try/catch fallback that renders unrecognized languages as plain unstyled text. This means missing languages do not crash the build -- they silently degrade to monochrome text without syntax highlighting. For "advanced" technical content, unhighlighted code blocks are a significant quality problem.
 
 **Why it happens:**
-FlexSearch's built-in charsets (LatinBalance, LatinAdvanced, etc.) normalize characters to ASCII equivalents, which destroys Cyrillic characters. This is a known open issue (GitHub issues #51, #182) without an official resolution.
+The language list was set during v1.0 for the original 105 questions. The fallback silently hides the problem, so nobody notices until someone inspects the rendered output.
 
 **How to avoid:**
-- Use separate FlexSearch instances per language with different configurations: Latin charset for EN index, `encode: false` with custom tokenizer for UA index.
-- Switch the active search instance based on the current language toggle.
-- For the UA index, use a custom encoder function that handles Cyrillic properly while preserving Latin technical terms (class names, tool names) that appear in Ukrainian answers.
-- Test search with Ukrainian characters (including special letters like i, yi, ye) from day one.
-- Alternative: evaluate Orama (formerly Lyra) which has better multilingual support out of the box, or MiniSearch which handles Unicode more gracefully.
+- Audit all code block languages in existing content: `grep -r '^\`\`\`' src/content/questions/ | grep -o '\`\`\`[a-z]*' | sort -u`.
+- Add every language used to the `langs` array in `src/lib/markdown.ts`.
+- Fix the known tech debt immediately: add `solidity` and `gherkin`.
+- After generating new content, re-run the audit and add any new languages before building.
 
 **Warning signs:**
-- Search returns results in English but not Ukrainian
-- Technical terms in Ukrainian answers (like "Kubernetes", "Docker") not found when searching in UA mode
-- Search works in dev but not after build (encoding differences)
+Code blocks on the site render without color highlighting -- monochrome text on a flat background instead of syntax-colored code.
 
 **Phase to address:**
-Phase 2 (Search Implementation). Requires a proof-of-concept with Ukrainian text before committing to a search library. This is a potential blocker that should be validated early.
+Infrastructure prep phase -- update Shiki config before adding any content. This is a prerequisite, not a follow-up.
 
 ---
 
-### Pitfall 4: Markdown Frontmatter Schema Drift Breaking Builds Silently
+### Pitfall 4: Filename/Slug Collisions Between New and Existing Questions
 
 **What goes wrong:**
-As AI generates content for 7+ sections, frontmatter fields become inconsistent: one file uses `tags: [docker, containers]`, another uses `tags: "docker, containers"`, another omits tags entirely. One file has `section: "QA"`, another has `category: "QA"`. The site builds but pages are missing from indexes, tags do not work, or sections show wrong content.
+Astro content collection entry IDs are derived from file paths (`{section}/{filename}`). The slug used for anchor links is extracted in the section page as `q.id.split('/').pop()`. If a new advanced question reuses a filename that already exists (e.g., `docker-security.md` already exists and a new "advanced Docker security" question also uses `docker-security.md`), the content collection will either fail to build or produce undefined behavior with duplicate IDs.
 
 **Why it happens:**
-Without schema validation, Markdown frontmatter is freeform YAML. AI-generated content is particularly prone to inconsistency across generation sessions. There is no compiler to catch "wrong field name" in frontmatter. The site generator silently ignores unknown fields.
+Advanced questions often cover the same topics as existing ones at deeper depth. Natural naming leads to collisions: the existing `docker-security.md` and a new "deep dive into Docker security" both want the same filename.
 
 **How to avoid:**
-- Define a strict frontmatter schema (using Zod, Astro content collections, or a custom validator) before generating any content.
-- Run schema validation in CI -- every PR with content changes must pass validation.
-- Create a content template file that AI prompts reference to ensure consistent structure.
-- Use a single canonical example file as the "source of truth" for frontmatter format.
+- Adopt a naming convention that distinguishes question types. Prefix all advanced question filenames: `deep-`, `trick-`, `practical-` (e.g., `deep-docker-security.md`, `trick-sql-null-comparison.md`, `practical-k8s-pod-debugging.md`).
+- Before generating, list all existing filenames per section to provide as context to the AI generator.
+- This naming convention also makes it trivial to filter or identify question types later when tags/search are implemented.
 
 **Warning signs:**
-- Questions appearing in the wrong section or not appearing at all
-- Tag filter showing unexpected or duplicate tags (e.g., "Docker" and "docker" as separate tags)
-- Build succeeds but pages are empty or have missing metadata
+`astro build` fails with "duplicate content entry" errors. Anchor links on the page point to wrong questions.
 
 **Phase to address:**
-Phase 1 (Content Structure). The schema must exist before content generation begins. Retrofitting schema validation onto 200+ existing files is tedious.
+Content preparation phase -- establish naming convention before creating files.
 
 ---
 
-### Pitfall 5: Accordion/Flashcard Answer Reveal Inaccessible and Janky on Mobile
+### Pitfall 5: Translation Semantic Drift in Trick Questions
 
 **What goes wrong:**
-The click-to-reveal answer pattern (core UX of the entire site) is implemented as a simple div toggle without proper accessibility or animation. Screen readers cannot navigate it. Keyboard users cannot toggle answers. On mobile, the tap target is too small, the expand animation causes layout shift that scrolls the question out of view, and long answers push subsequent cards far down the page.
+The co-located bilingual format (both languages in one file) prevents structural drift. But semantic drift is the real risk for advanced content: the UA and EN versions of a trick question may have different "trick" mechanisms. A subtle wording difference can make the English version trivially obvious while the Ukrainian version is properly deceptive, or vice versa. For practical tasks, the expected solution approach may differ between languages if the problem statement is not precisely parallel.
 
 **Why it happens:**
-Developers implement the simplest possible show/hide toggle (`display: none` to `display: block`) and move on. Accessibility (ARIA attributes, keyboard handling) and mobile UX (scroll anchoring, animation performance) are treated as polish rather than core functionality.
+AI generates both languages simultaneously but handles technical nuance differently per language. Ukrainian technical vocabulary is less standardized for advanced concepts (e.g., "reentrancy attack" in blockchain, "phantom read" in SQL, "resource quota" in Kubernetes). The reviewer may only carefully check one language version.
 
 **How to avoid:**
-- Use the native HTML `<details>`/`<summary>` elements as the base. They provide keyboard navigation and screen reader support for free. Style them with CSS.
-- If custom implementation is needed: use `<button>` for the question header, `aria-expanded`, `aria-controls`, proper `role` attributes. Support Enter/Space to toggle, Tab to navigate between cards.
-- For animations, use `max-height` transitions or the View Transitions API rather than `display` toggle. Use `scrollIntoView({ behavior: 'smooth', block: 'nearest' })` after expanding to prevent the question from scrolling off screen.
-- Set minimum tap target of 44x44px on mobile for the toggle area.
-- Test with 50+ cards on a single page on a real phone -- not just desktop Chrome.
+- Review trick questions in both languages side-by-side, specifically verifying the "trap" mechanism works identically in both.
+- Keep code blocks identical between UA and EN answers -- only translate the prose explanation around them.
+- Establish a glossary of key technical terms with their canonical Ukrainian translations and enforce it across all content.
+- For practical tasks, verify the problem statement describes the same scenario in both languages.
 
 **Warning signs:**
-- Cannot navigate cards using Tab key
-- Screen reader announces nothing when answer is revealed
-- Opening a card on mobile causes jarring scroll jump
-- Opening many cards makes the page sluggish (DOM thrashing)
+One language version has significantly more or less content than the other. Code examples differ between UA and EN answers for the same question. A trick question is obvious in one language but not the other.
 
 **Phase to address:**
-Phase 1 (Core UI). This is the primary interaction pattern of the entire site. Getting it wrong means the core product is broken.
+Content review phase -- require bilingual review for every question, especially trick questions.
 
 ---
 
-## Moderate Pitfalls
-
-### Pitfall 6: Tag Taxonomy Sprawl Making Filtering Useless
+### Pitfall 6: Flat List UX Collapse at 30 Questions Per Section
 
 **What goes wrong:**
-Without governance, tags proliferate: "docker", "Docker", "containers", "containerization", "container-orchestration" all exist as separate tags. The tag filter UI shows 100+ tags across 7 sections, overwhelming users. Tags lose their utility as a navigation mechanism.
+Going from 15 to 30 questions per section doubles the page length. The current UI renders all questions in a flat `<div class="flex flex-col gap-3">` with no visual grouping. Users scrolling through 30 flashcards cannot distinguish basic from advanced questions, find the section they need, or understand the progression. The page becomes an overwhelming wall of collapsed cards.
 
 **Why it happens:**
-AI-generated content produces varied tagging. No controlled vocabulary is defined upfront. Each content generation session invents slightly different tags. Nobody audits the tag list as content grows.
+The v1.0 design worked well for 15 questions -- a manageable list that fits in a few scroll lengths. The architecture (FlashcardList component iterating over a flat array) has no concept of sub-groups or visual separators. Doubling content without UI adaptation creates a quantity-over-quality feel.
 
 **How to avoid:**
-- Define a controlled tag vocabulary per section (max 8-12 tags per section) in a single `tags.yaml` or `tags.json` file. Content can only use tags from this list.
-- Validate tags at build time -- reject any content file using an undefined tag.
-- Normalize tags to lowercase-kebab-case in the schema.
-- Show tags grouped by section in the UI, not as one flat list.
+- Add a visual separator or section header between the original 15 and the new 15 advanced questions (e.g., "Advanced Questions" divider).
+- Use the `order` numbering gap (1-15 basic, 16-30 advanced) to programmatically insert a divider in FlashcardList.
+- Consider adding question type badges (deep / trick / practical) to each flashcard summary line.
+- If tags are implemented in v1.1, add a filter bar at the top of each section page.
 
 **Warning signs:**
-- Tag filter showing more than 15 tags per section
-- Near-duplicate tags appearing (singular/plural, case variants)
-- Users ignoring the tag filter entirely
+User testing reveals people scroll past content without engaging. Users cannot find specific questions they previously read. Section pages feel "too long."
 
 **Phase to address:**
-Phase 1 (Content Structure) for the vocabulary definition. Phase 2 for the filter UI.
-
----
-
-### Pitfall 7: Dark Mode as Afterthought Breaking Code Snippets and Content Readability
-
-**What goes wrong:**
-Dark mode is toggled globally but code syntax highlighting, Markdown-rendered HTML (tables, blockquotes, inline code), and any embedded images/diagrams are unreadable because their colors were only designed for light mode. White backgrounds on code blocks in dark mode, invisible text in tables, harsh contrast on inline code.
-
-**Why it happens:**
-Dark mode is implemented as a CSS variable swap on background and text colors. But Markdown-rendered content generates HTML that often has its own styling (syntax highlighter themes, table borders, blockquote styling) that does not respond to the theme variables.
-
-**How to avoid:**
-- Choose a syntax highlighting theme that has both light and dark variants (e.g., Shiki with dual themes). Configure theme switching at the highlighter level, not just CSS.
-- Style all Markdown-generated HTML elements (tables, blockquotes, code, links) explicitly for both themes using CSS custom properties.
-- Test every content type (plain text answer, code-heavy answer, table answer, list answer) in both themes before shipping.
-
-**Warning signs:**
-- Code blocks have white/light backgrounds in dark mode
-- Table borders disappear in dark mode
-- Inline code (`backtick text`) is unreadable in one mode
-
-**Phase to address:**
-Phase 1 (Core UI / Design System). Theme support must be baked into the component system, not bolted on later.
-
----
-
-### Pitfall 8: Content-Heavy Pages Causing Poor Initial Load Performance
-
-**What goes wrong:**
-A section page loads all 40-50 flashcards at once, including full answer content (hidden but present in DOM). With code examples and long explanations, this means 100KB+ of HTML per section page. First Contentful Paint suffers. Mobile devices struggle with DOM size.
-
-**Why it happens:**
-The simplest implementation renders all cards in a single page load. Since answers are "hidden," developers assume they do not cost anything. But the DOM nodes exist, the HTML is parsed, and any syntax highlighting runs on all code blocks at load time.
-
-**How to avoid:**
-- Render answer content lazily -- only inject answer HTML into the DOM when the card is first opened. Store answers as data attributes or fetch them on demand.
-- If a section has 30+ questions, implement pagination or "load more" (show 15, button to load next 15).
-- Defer syntax highlighting to when the card is opened, not at page load.
-- Use `content-visibility: auto` CSS property on answer containers for browser-level rendering optimization.
-
-**Warning signs:**
-- DOM node count exceeding 3000 on a section page
-- Lighthouse flags "Avoid an excessive DOM size"
-- Syntax highlighting library initializes on 50+ code blocks at page load
-- Time to Interactive exceeding 3 seconds on mobile
-
-**Phase to address:**
-Phase 2 (Performance optimization). Build the lazy pattern into the card component early; retrofitting is harder.
-
----
-
-## Minor Pitfalls
-
-### Pitfall 9: Language Toggle Losing User Position and State
-
-**What goes wrong:**
-User is reading question #35 in the QA section in Ukrainian, switches to English, and gets sent back to the top of the page or to the section index. All expanded cards collapse. Their scroll position and reading context is lost.
-
-**How to avoid:**
-- Preserve the current route and card state when switching languages. Use URL-based card identifiers (anchors or query params) that are language-independent.
-- Store expanded card state in URL hash or sessionStorage so language switch preserves it.
-- Each question needs a stable ID that is the same across both languages.
-
-**Phase to address:** Phase 2 (i18n implementation).
-
----
-
-### Pitfall 10: No Content Validation in CI Leading to Broken Deploys
-
-**What goes wrong:**
-A Markdown file with broken YAML frontmatter, unclosed code blocks, or invalid tag references gets merged and the site either fails to build (best case) or builds with missing/broken content (worst case).
-
-**How to avoid:**
-- Add a CI step that validates all Markdown files: parse frontmatter, check required fields, validate tags against vocabulary, check for broken internal links.
-- Use markdownlint for consistent Markdown formatting.
-- Make validation a required check before merge.
-
-**Phase to address:** Phase 1 (CI/CD setup).
+UI enhancement phase -- should be planned alongside content addition, not as an afterthought. The content and UI work should ship together.
 
 ---
 
@@ -238,87 +143,91 @@ A Markdown file with broken YAML frontmatter, unclosed code blocks, or invalid t
 
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Separate files per language instead of co-located content | Simpler file structure | Translation drift, sync maintenance nightmare | Never for this project size |
-| Inlining all card content in page HTML | Simple rendering | DOM bloat, slow pages as content grows | MVP with <15 questions per section |
-| Flat tag list without controlled vocabulary | Faster content generation | Tag sprawl, useless filtering | Never -- define vocabulary first |
-| Single search index for both languages | Simpler search setup | Broken Cyrillic search or broken Latin search | Never -- split from the start |
-| `display: none/block` for card toggle | Quick implementation | No animation, no accessibility, layout shifts | Only as initial prototype, replace before launch |
+| No question `type` field in frontmatter (deep/trick/practical) | No schema changes needed | Cannot filter or visually distinguish question types without re-tagging all 90 files | Never -- add a `type` field to the schema before generating content |
+| Hardcoded Shiki language list | Simple config | Every new content language requires a code change to `src/lib/markdown.ts` | Only acceptable if audit is done before each content batch |
+| No build-time content validation CI step | Faster CI pipeline | Broken YAML or schema violations ship to production on push to main | Never -- add validation before bulk-adding 90 files to a CI/CD auto-deploy pipeline |
+| Global `marked.setOptions()` in renderMarkdown | Quick setup | Mutates global state, could cause issues with concurrent rendering | Acceptable at current scale (build-time only, sequential) |
+| No `type` or difficulty metadata | Fewer fields per file | Cannot distinguish basic vs advanced vs trick in the UI or search | Never for v1.1 -- the whole point is adding categorized advanced content |
+
+## Integration Gotchas
+
+| Integration | Common Mistake | Correct Approach |
+|-------------|----------------|------------------|
+| Astro Content Collections (glob loader) | One broken file with invalid frontmatter fails the entire collection, not just that file | Validate each file independently against the Zod schema before committing; use a pre-commit hook or CI step |
+| Shiki syntax highlighting | Using language identifiers that do not match Shiki grammar names (`sh` vs `bash`, `sol` vs `solidity`) | Check Shiki's supported language list; use canonical names; test with `astro build` |
+| GitHub Pages CI/CD auto-deploy | Pushing 90 new files at once with a broken file deploys nothing (build fails) or deploys stale content | Build locally first; push in verified batches; or add a staging step |
+| Marked + Shiki rendering pipeline | Nested code blocks (triple backticks inside triple backticks) break the Marked parser | Ensure AI-generated content never contains nested fenced code blocks; use indented code blocks for "code about code" if needed |
+| Zod schema defaults | `tags: z.array(z.string()).default([])` means empty tags pass validation silently | If tags are meant to be required for new content, update the schema or add a separate check |
 
 ## Performance Traps
 
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|----------------|
-| Full-text answer content in search index | Search index > 1MB, slow first search | Index questions only, truncate answers | 100+ questions with code examples |
-| All cards rendered in DOM at page load | High DOM count, slow TTI on mobile | Lazy render answers on expand | 30+ cards per section page |
-| Syntax highlighting all code blocks at load | 2-3s JS execution on mobile | Highlight on card expand only | 10+ code blocks per page |
-| Loading both language search indexes | Double bandwidth for search | Load only active language index | Always -- no scenario where both needed |
+| All 30 questions rendered on single section page | Increased HTML payload, slower FCP on mobile | Monitor page sizes after content addition; add pagination only if >500KB per page | ~50+ questions with heavy code blocks per section |
+| Shiki dual-theme output doubles code block HTML | Each code block emits two color sets via CSS variables | Already using CSS variable approach (optimal for this); no action needed | Not a concern at 30 questions per section |
+| Build time scaling with Shiki renders | `astro build` slowing from seconds to minutes | The singleton `createHighlighter` pattern is already in place; bottleneck is `codeToHtml()` calls | Likely still under 30s for 195 total questions; monitor |
+| Loading all language content for both UA and EN | Both languages rendered at build time but only one visible | This is the correct approach for a static site with client-side language toggle; no performance concern | N/A -- both are needed |
 
 ## UX Pitfalls
 
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| No "expand all / collapse all" button | Users must click 40 times to review all cards | Add bulk toggle, especially useful for review mode |
-| Tag filter resets when navigating between sections | Users must re-select tags every time | Persist active tag filters in URL query params |
-| Search results show only question text | Users cannot tell if the answer matches their need | Show highlighted match preview from answer text |
-| No visual indicator of card count per tag | Users cannot gauge effort before filtering | Show count badges on tag chips |
-| Language toggle not prominent enough | Users do not discover bilingual content exists | Place language toggle in header, visible on all pages |
+| 30 questions in flat list with no grouping | Users overwhelmed, cannot find what they need | Visual divider between basic (1-15) and advanced (16-30) questions |
+| Trick questions with no visual indicator | Users may memorize a wrong interpretation thinking it is straightforward | Label trick questions with a badge or icon so users know to read carefully |
+| Long advanced answers pushing content below fold | Users scroll endlessly inside a single expanded flashcard | Keep answers concise; for multi-part answers, use headers within the answer |
+| Abrupt difficulty jump from question 15 to 16 | Users confused by sudden shift from basic to advanced | Add a clear "Advanced" section header between basic and advanced blocks |
+| Question count display says "30 questions" with no context | Users intimidated by volume, no sense of structure | Show count breakdown: "15 fundamentals, 15 advanced" or similar |
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **Search:** Works with Ukrainian characters (not just Latin) -- test with Cyrillic queries
-- [ ] **Search:** Handles technical terms in Ukrainian context (e.g., searching "Docker" while in UA mode)
-- [ ] **Flashcards:** Keyboard accessible (Tab between cards, Enter/Space to toggle)
-- [ ] **Flashcards:** Screen reader announces expanded/collapsed state
-- [ ] **Dark mode:** Code blocks readable in both themes
-- [ ] **Dark mode:** Tables, blockquotes, inline code all styled for both themes
-- [ ] **i18n:** Every question exists in both languages (no orphaned translations)
-- [ ] **Tags:** No duplicate/near-duplicate tags (case, plural, synonym variants)
-- [ ] **Mobile:** Card expand does not scroll question out of viewport
-- [ ] **Mobile:** Tap targets at least 44px for all interactive elements
-- [ ] **Performance:** Section pages with 40+ cards load under 3s on 3G throttle
-- [ ] **Content:** All frontmatter validates against the defined schema
+- [ ] **Every file has all 4 language fields:** `ua_question`, `en_question`, `ua_answer`, `en_answer` -- verify no field is empty string or missing
+- [ ] **Order numbers are unique per section:** Run `grep "^order:" src/content/questions/{section}/*.md | sort -t: -k3 -n` for each section, confirm no duplicates
+- [ ] **Order numbers are sequential 16-30:** New questions should not use orders 1-15 (existing) or skip numbers
+- [ ] **Code blocks have syntax highlighting:** View every section page and verify code blocks are colored, not plain monochrome text
+- [ ] **All code block languages are registered:** Run `grep -r '^\`\`\`' src/content/questions/ | grep -o '\`\`\`[a-z]*' | sort -u` and compare against the `langs` array in `src/lib/markdown.ts`
+- [ ] **Anchor links work for new questions:** Click the link icon on each new flashcard and verify the URL fragment scrolls to it correctly
+- [ ] **Both languages render correctly:** Toggle between UA and EN for every new question and verify display is correct in both
+- [ ] **Tags field is populated:** New questions should have meaningful tags -- the schema defaults to `[]` so empty tags pass validation but defeat future filtering
+- [ ] **No YAML special characters break rendering:** Questions containing colons, quotes, hashes, or brackets in their text render correctly
+- [ ] **Solidity highlighting works:** Fix the known tech debt by adding `solidity` to Shiki langs array; verify blockchain code blocks are highlighted
+- [ ] **Gherkin highlighting works:** Add `gherkin` to Shiki langs array; verify BDD/Cucumber code blocks in automation-qa are highlighted
+- [ ] **Section `value` matches directory name:** The `section` frontmatter field must exactly match the directory name (e.g., `automation-qa` not `automationQA` or `Automation QA`)
+- [ ] **No filename collisions:** No new file shares a filename with an existing file in the same section directory
 
 ## Recovery Strategies
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Translation drift (content out of sync) | HIGH | Audit all files, diff question lists per language, bulk-update missing translations. If using separate files, consider migrating to co-located format. |
-| Search index bloat | MEDIUM | Rebuild index pipeline to separate question-only index. Requires changes to index generation and search result display. |
-| FlexSearch Cyrillic failure | MEDIUM | Switch to separate instances per language or migrate to Orama/MiniSearch. Requires search module rewrite. |
-| Frontmatter schema drift | HIGH | Write migration script to normalize all existing files. Manual review needed for ambiguous cases. More files = more pain. |
-| Tag sprawl | MEDIUM | Define canonical vocabulary, write migration script to map existing tags to canonical ones. Requires content review. |
-| Inaccessible flashcards | LOW | Replace custom toggle with `<details>`/`<summary>` or add proper ARIA. Mostly CSS and attribute changes. |
+| YAML frontmatter breakage | LOW | Fix syntax in the broken file; each file is independent; re-run `astro build` |
+| Order number collisions | LOW | Re-number affected files; grep for duplicates; rebuild |
+| Slug/filename collisions | LOW | Rename the conflicting file; slugs derive from filenames, nothing else to update |
+| Missing Shiki languages | LOW | Add language to `langs` array in `src/lib/markdown.ts`; rebuild |
+| Translation semantic drift | MEDIUM | Requires human review of both versions side-by-side; re-generate affected questions if needed |
+| Flat list UX | MEDIUM | Requires FlashcardList component changes to add grouping; content is fine, only UI needs work |
+| Missing `type` metadata | MEDIUM | Requires adding field to schema and backfilling all 90 files; easier if done before generation |
+| Build time explosion | LOW | Profile with `time astro build`; unlikely to be an issue at 195 questions |
 
 ## Pitfall-to-Phase Mapping
 
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Translation drift | Phase 1: Content Structure | CI check confirms both languages present for every question |
-| Search index bloat | Phase 2: Search | Index file size under 500KB per language, search latency under 300ms |
-| FlexSearch Cyrillic | Phase 2: Search | Automated test searching Ukrainian text returns correct results |
-| Frontmatter schema drift | Phase 1: Content Structure | CI schema validation passes on every content PR |
-| Accordion accessibility | Phase 1: Core UI | Lighthouse accessibility audit scores 95+, manual keyboard test passes |
-| Tag sprawl | Phase 1: Content Structure | Build fails if content uses tag not in controlled vocabulary |
-| Dark mode content | Phase 1: Design System | Visual regression tests for code blocks and tables in both themes |
-| Page performance | Phase 2: Optimization | Lighthouse performance score 90+ on section page with 40 cards |
-| Language toggle state loss | Phase 2: i18n | Manual test: switch language mid-page, verify position preserved |
-| CI content validation | Phase 1: CI/CD | Intentionally break a content file, verify CI catches it |
+| YAML frontmatter breakage | Content generation | YAML lint on every file; `astro build` succeeds without errors |
+| Order number collisions | Content prep (before generation) | Script that checks unique sequential order values 16-30 per section |
+| Shiki language gaps | Infrastructure prep (before content) | Updated `langs` array; visual check of all code blocks post-build |
+| Filename/slug collisions | Content prep (naming convention) | No duplicate filenames within any section directory |
+| Translation semantic drift | Content review (after generation) | Side-by-side review of UA/EN for each question, especially trick questions |
+| Flat list UX | UI enhancement (alongside content) | Visual separation visible between basic and advanced question blocks |
+| Missing type/difficulty metadata | Schema update (before generation) | `type` field present in schema; every new file has a valid type value |
+| Build time regression | Post-integration testing | `time astro build` stays under 60s; section page sizes under 500KB |
 
 ## Sources
 
-- [FlexSearch Cyrillic support issue #51](https://github.com/nextapps-de/flexsearch/issues/51)
-- [FlexSearch Cyrillic & Latin mixed search issue #182](https://github.com/nextapps-de/flexsearch/issues/182)
-- [FlexSearch documentation](https://github.com/nextapps-de/flexsearch)
-- [Lunr.js pre-building indexes](https://lunrjs.com/guides/index_prebuilding.html)
-- [Accessible Accordion patterns - Aditus](https://www.aditus.io/patterns/accordion/)
-- [Accordion accessibility tests - USWDS](https://designsystem.digital.gov/components/accordion/accessibility-tests/)
-- [i18n translation drift management - i18n-state-manager](https://tasknotes.dev/development/i18n-state-manager/)
-- [Missing translations in i18next - Locize](https://www.locize.com/blog/missing-translations/)
-- [Taxonomy 101 - Nielsen Norman Group](https://www.nngroup.com/articles/taxonomy-101/)
-- [Validating YAML frontmatter with JSONSchema](https://ndumas.com/2023/06/validating-yaml-frontmatter-with-jsonschema/)
-- [Markdown frontmatter validation - Astro docs](https://docs.astro.build/en/reference/errors/markdown-content-schema-validation-error/)
-- [Search UX for static sites - Tyler Crosse](https://www.tylercrosse.com/ideas/search-part1-research-and-ux/)
+- Direct codebase analysis: `src/content.config.ts` (Zod schema with glob loader), `src/lib/markdown.ts` (Shiki singleton with fixed langs array), `src/pages/[locale]/[section]/index.astro` (sort-by-order rendering, slug extraction), `src/components/FlashcardList.astro` (flat list rendering)
+- Content audit: 105 existing files across 7 sections, each with `order: 1-15`, using `solidity` (4 blocks) and `gherkin` (2 blocks) without Shiki registration
+- Known tech debt from `PROJECT.md`: Solidity syntax highlighting gap explicitly documented
+- Astro 6 content collections documentation: glob loader validates entire collection, not per-file
+- Shiki v4 language loading behavior: unregistered languages fall through to try/catch, render as plain text
 
 ---
-*Pitfalls research for: Interview Q&A cheatsheet static site*
-*Researched: 2026-03-20*
+*Pitfalls research for: Adding 90 advanced bilingual interview questions to existing Astro static site*
+*Researched: 2026-03-21*

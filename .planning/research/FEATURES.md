@@ -1,178 +1,177 @@
 # Feature Research
 
-**Domain:** Interview Q&A cheatsheet / flashcard static site
-**Researched:** 2026-03-20
-**Confidence:** HIGH
+**Domain:** Interview cheatsheet -- advanced question types (v1.1 milestone)
+**Researched:** 2026-03-21
+**Confidence:** HIGH (well-understood domain, clear existing codebase, straightforward extension)
+
+## Scope
+
+This research covers features needed for adding 90 advanced bilingual questions (deep technical, trick/gotcha, practical tasks) to 6 existing sections. It does NOT re-evaluate v1.0 features (already shipped).
 
 ## Feature Landscape
 
 ### Table Stakes (Users Expect These)
 
-Features users assume exist. Missing these = product feels incomplete.
+Features that are non-negotiable for the v1.1 advanced questions milestone. Without these, the new content feels like "more of the same" rather than a meaningful upgrade.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Category/section browsing | Users expect questions organized by topic (QA, Java, Docker, etc.). Every competitor does this. | LOW | Simple route-per-section. PROJECT.md already specifies 5-7 sections. |
-| Click-to-reveal answers (flashcard interaction) | Core interaction pattern. Users expect to see the question first, then reveal the answer on click/tap. Active recall is the entire value proposition. | LOW | Accordion or card-flip pattern. Accordion is simpler and works better for text-heavy answers with code blocks. |
-| Mobile responsiveness | Over 50% of users will study on phones during commute/waiting. Non-negotiable for a study tool. | MEDIUM | Must work well at 320px+. Flashcard tap targets need to be large enough. |
-| Full-text search | Users need to find specific questions across all sections. IT Flashcards, Quizlet, and every serious reference site has search. | MEDIUM | Client-side search (Fuse.js, Pagefind, or Lunr) since static site. Must index both questions and answers. |
-| Clean typography and code formatting | Technical Q&A requires proper code blocks with syntax highlighting. Markdown answers with code snippets are useless without this. | LOW | Markdown rendering with syntax highlighting (Shiki or Prism). Table stakes for any developer-facing content site. |
-| Fast page loads | Static site should load near-instantly. Users comparing against devhints.io and similar expect sub-second loads. | LOW | Inherent to static sites if done correctly. Avoid client-side rendering bottlenecks. |
-| Permalink/shareable URLs | Users share specific questions with friends or bookmark them. Without deep links, the site feels broken. | LOW | Each section needs its own URL at minimum. Anchor links to individual questions are ideal. |
+| Question type field in schema | Every question needs a machine-readable type so the UI can distinguish basic from advanced. Without it, 30 questions per section are an undifferentiated wall. | LOW | Add `type` field to `content.config.ts` schema: `z.enum(["basic", "deep-technical", "trick", "practical"]).default("basic")`. Default preserves backward compatibility with existing 105 questions. One-line schema change. |
+| Question type badge/pill | Users need to know at a glance whether a question is deep-technical, trick, or practical. Interview prep platforms universally distinguish question categories visually. DataCamp, InterviewBit, and others all label question types. | LOW | Render a small colored `<span>` pill next to the question text inside `Flashcard.astro`'s `<summary>`. Approximately 10 lines of template + Tailwind classes. No new components needed. |
+| Visual grouping by type within sections | When a section grows from 15 to 30 questions, a flat list becomes hard to scan. Users expect the 3 new types to be visually separated from the original 15 basic questions. | LOW | Add subheadings in `FlashcardList.astro` that group questions by type. Simple `.filter()` + `.map()` on the questions array. Approximately 20 lines. |
+| Bilingual content for all 90 new questions | Existing site is fully UA/EN. Any new question without both languages breaks the user contract. | LOW (code), HIGH (content effort) | Same frontmatter structure (`ua_question`, `en_question`, `ua_answer`, `en_answer`). 90 questions x 2 languages = 180 Q&A pairs. AI-generated per PROJECT.md conventions. No code changes needed for this. |
+| Code examples in advanced answers | Advanced technical questions demand code snippets. Users expect syntax-highlighted examples showing the "why" not just the "what". Deep-technical and practical questions especially need code. | NONE (already supported) | Already works via Shiki + Markdown fenced code blocks. Content authors just include code. Known gap: Solidity lacks highlighting (tech debt from v1.0). |
+| Consistent ordering | New questions need predictable placement. Users scanning a section should find basic questions first, then advanced types grouped together. | LOW | Existing `order` field. Assign order 16-30 for new questions. Combine with type-based grouping in the UI so order within each type group is deterministic. |
 
 ### Differentiators (Competitive Advantage)
 
-Features that set the product apart. Not required, but valuable.
+Features that make this cheatsheet stand out from generic interview question lists. Not required for v1.1 launch, but high-value.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| UA/EN language toggle | Most interview prep sites are English-only. Ukrainian localization serves an underserved audience and helps users prep for both Ukrainian and English interviews. | MEDIUM | Each question needs both language versions in Markdown. Toggle switches all content, not just UI chrome. Already in PROJECT.md requirements. |
-| Tag-based cross-cutting filtering | Questions tagged by concept (e.g., "concurrency", "networking") let users study across sections. A question in Java and Kubernetes might both be tagged "networking." Goes beyond simple category browsing. | MEDIUM | Tags stored in Markdown frontmatter. Filter UI on section pages. Tag index page showing all tags. |
-| Modern dark mode with design polish | Most open-source cheatsheet sites (devhints.io, GitHub gists, Tech Interview Handbook) look utilitarian. A polished, modern design with dark mode, smooth animations, and visual hierarchy makes studying more pleasant and builds trust. | MEDIUM | CSS custom properties for theming. Respect system preference, allow manual toggle. Already in PROJECT.md requirements. |
-| Keyboard navigation | Power users studying intensively want to navigate with keyboard: arrow keys to move between questions, Enter/Space to reveal answers. | LOW | Event listeners on question list. Low effort, high perceived quality. |
-| "Expand all / Collapse all" toggle | When reviewing (not testing yourself), users want to read through all Q&A without clicking each one. | LOW | Simple state toggle. Tiny feature, big convenience. |
-| Anchor links to individual questions | Share or bookmark a specific question (e.g., `/java#what-is-jvm`). Most flashcard sites only link to categories. | LOW | Generate ID from question text. Add copy-link button on hover. |
-| Print-friendly / export view | Some users want to print cheatsheets or save as PDF for offline study. | LOW | CSS `@media print` stylesheet. Hide nav, expand all answers, clean layout. |
+| "Why this is tricky" callout pattern in trick questions | Most sites just list trick questions. Explaining *why* the question traps people (the common wrong answer, the subtle distinction) is uniquely valuable. DataCamp and InterviewBit mention gotchas but don't structure them consistently. | LOW | Content convention, not code. Use a bold prefix in the answer body: `**Trap:** Most developers assume X, but...`. Renders with existing Markdown/prose styling. Document the convention so all 30 trick questions follow it. |
+| Structured practical task format | Practical tasks should show scenario, then reveal a structured approach -- not just a bare answer. Real interviews test *process*, not just knowledge. | LOW | Content convention using Markdown headers within the answer: `**Scenario:** ...`, `**Approach:** ...`, `**Solution:** ...`. No schema change, no code change. Just a content pattern to document and follow. |
+| Type-specific visual styling (border accents) | Different left-border colors for each question type. Deep-technical = blue, trick = amber/orange, practical = green. Enables instant visual scanning without reading labels. | LOW | 3-4 Tailwind `border-l-4` color variants in `Flashcard.astro` keyed off the `type` prop. Approximately 5 lines of conditional CSS. |
+| Tag-based filtering UI | PROJECT.md lists tags as active requirement. Tags already exist in schema and frontmatter. With 195 total questions, filtering by subtopic (e.g., "multithreading", "networking") across a section becomes genuinely useful. | MEDIUM | Schema supports it (already defined). Need a client-side filter component with vanilla JS or Astro island. Button group or checkbox list that hides/shows flashcards by tag. |
+| Full-text search (Pagefind) | PROJECT.md lists this as active. With 195 questions across 7 sections, search becomes valuable. Pagefind is purpose-built for static sites and well-documented for Astro integration. | MEDIUM | Pagefind runs at build time to generate a search index. Needs a search input component and results display. Independent of question types -- can be built in parallel. |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
-Features that seem good but create problems.
-
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| User accounts and progress tracking | "I want to track which questions I've studied" | Requires backend, auth, database. Breaks the static site constraint. Massively increases complexity and hosting cost for a v1. | Use browser localStorage to mark questions as "reviewed" -- no auth needed. Or defer entirely; the site's value is the content, not tracking. |
-| Quiz mode with multiple-choice answers | "Test me on the material" | Requires generating plausible wrong answers for every question. Enormous content effort. Multiple-choice also encourages recognition over recall, which is pedagogically weaker than flashcards. Already explicitly out of scope in PROJECT.md. | Stick with click-to-reveal flashcards. Active recall (try to answer before revealing) is more effective than multiple choice. |
-| Spaced repetition (SRS) algorithm | "Show me questions I'm weakest on" | Requires persistent state (user accounts or complex localStorage), scheduling logic, and fundamentally changes the architecture from "reference site" to "learning app." Scope explosion. | The site is a cheatsheet, not Anki. Users who want SRS already use Anki. Focus on being the best reference/study content. |
-| User-submitted questions / community content | "Let users contribute questions" | Moderation burden, spam, quality control, needs backend for submissions. Content quality drops fast without curation. | Accept contributions via GitHub PRs on the Markdown files. Git is the CMS. Community can contribute through the repo. |
-| Difficulty levels (Junior/Middle/Senior) | "Categorize questions by experience level" | Subjective and contentious. What's "senior" for one company is "mid" for another. Creates arguments, not value. Already explicitly out of scope in PROJECT.md. | Use tags instead. Tag questions with concepts, and let users self-select what to study. |
-| Comments / discussion on questions | "Let users discuss answers" | Requires backend, moderation. Discussions become outdated. Distracts from the core value of quick reference. | Link to relevant documentation or resources in the answer itself. |
-| CMS admin panel | "Make it easier to add content" | Adds significant complexity. The content workflow is already simple: edit Markdown, push to git, site rebuilds. A CMS is overhead for a site maintained by 1-2 people. Already out of scope in PROJECT.md. | Git + Markdown + CI/CD is the CMS. |
+| Difficulty levels (Junior/Mid/Senior) | Seems logical for progressive learning | Explicitly out of scope per PROJECT.md. Subjective -- what is "senior" at one company is "mid" at another. Creates friction in content creation and arguments about classification. | Use question *types* (basic/deep-technical/trick/practical) instead. These describe the nature of the question, not a subjective difficulty rating. |
+| Separate pages per question type | "Keep advanced questions on their own page" | Fragments the content. Users preparing for a Java interview want ALL Java questions in one place. Extra navigation overhead. More routes to maintain. | Group by type *within* the section page using subheadings. One page per section, scroll to find what you need. |
+| Multiple-choice quiz mode for trick questions | "Trick questions are perfect for quizzes" | Out of scope per PROJECT.md ("only flashcards"). Writing 3-4 plausible wrong answers per trick question = 3-4x content effort for 30 questions. Fundamentally changes the product. | Flashcard click-to-reveal already works. The "Trap:" callout pattern in trick question answers achieves the same learning goal without quiz infrastructure. |
+| Collapsible type sections | "Let users collapse entire type groups" | Adds state management complexity. Users would lose context about what questions exist in collapsed sections. Double-accordion (section collapse + flashcard reveal) creates confusing nested interactions. | Flat subheading groups with all flashcards visible (collapsed individually as they already are). Users can scroll; the page is not infinitely long. |
+| Per-question difficulty rating (stars, numbers) | "Rate each question 1-5 difficulty" | Requires per-question calibration, highly subjective, creates content maintenance burden. Every rating becomes debatable. | The question type itself signals relative difficulty. Deep-technical and trick questions are implicitly harder than basic. |
 
 ## Feature Dependencies
 
 ```
-[Markdown content files]
-    |-- requires --> [Markdown parser + syntax highlighting]
-    |                   |-- requires --> [Section pages with flashcard rendering]
-    |                                       |-- enhances --> [Click-to-reveal interaction]
-    |                                       |-- enhances --> [Expand all / Collapse all]
-    |                                       |-- enhances --> [Keyboard navigation]
-    |
-    |-- requires --> [Frontmatter parsing (tags, language)]
-                        |-- enables --> [Tag filtering]
-                        |-- enables --> [UA/EN language toggle]
+[type field in content.config.ts schema]
+    +-- enables --> [Type badge in Flashcard.astro]
+    +-- enables --> [Visual grouping in FlashcardList.astro]
+    +-- enables --> [Type-specific border colors]
 
-[Full-text search]
-    |-- requires --> [Search index built from all Markdown content]
-    |-- requires --> [Section pages exist to link results to]
+[Content conventions document]
+    +-- guides --> [90 new Markdown content files]
 
-[Dark mode]
-    |-- independent (CSS-only, no content dependency)
+[90 new Markdown content files]
+    +-- requires --> [type field in schema]
+    +-- requires --> [Content conventions documented first]
 
-[Anchor links to questions]
-    |-- requires --> [Section pages with individual question IDs]
+[Tag filter UI]
+    +-- requires --> [Tags populated in new content files]
+    +-- independent of --> [Question type system]
 
-[Print view]
-    |-- requires --> [Section pages rendered]
+[Pagefind search]
+    +-- independent of --> [Question types]
+    +-- independent of --> [Tag filter]
 ```
 
 ### Dependency Notes
 
-- **Section pages require Markdown parsing:** Content pipeline (Markdown to HTML) must be built first. Everything else layers on top.
-- **Tags require frontmatter:** Tag filtering depends on structured metadata in Markdown files. Define the frontmatter schema early.
-- **Language toggle requires dual content:** Every question must have UA and EN versions. This is a content structure decision that affects Markdown file format from day one.
-- **Search requires content index:** Full-text search needs a pre-built index. Choose the search library early since it affects the build pipeline.
-- **Dark mode is independent:** Can be added at any point since it is purely CSS theming.
+- **Schema change must come first.** The `type` field addition to `content.config.ts` is a prerequisite for everything else. With `.default("basic")`, existing 105 questions need zero changes.
+- **Content conventions before content.** Document the "Trap:" callout pattern and structured practical task format *before* generating 90 questions. Retrofitting conventions across 90 files is painful.
+- **UI changes (badge, grouping, colors) can happen in parallel with content.** They depend on the schema but not on the actual content files existing yet.
+- **Tag filter and Pagefind are fully independent.** Neither depends on the question type system. Can be built in any order, or deferred entirely without blocking v1.1.
 
-## MVP Definition
+## MVP Definition (v1.1 Scope)
 
-### Launch With (v1)
+### Must Ship
 
-Minimum viable product -- what is needed to validate the concept.
+- [ ] Schema update: add `type` field (`basic | deep-technical | trick | practical`) with `.default("basic")` to `content.config.ts`
+- [ ] Question type badge in `Flashcard.astro` -- small colored pill showing question type
+- [ ] Visual grouping by type in section pages -- subheadings separating basic from advanced types
+- [ ] Content conventions document -- patterns for "Trap:" callouts, practical task structure, deep-technical answer depth
+- [ ] 90 new bilingual Markdown content files (5 deep-technical + 5 trick + 5 practical per 6 sections)
 
-- [x] Home page with section list -- entry point, shows what topics are available
-- [x] Section pages with flashcard Q&A -- the core value: questions with click-to-reveal answers
-- [x] Markdown content pipeline -- content stored in Markdown, rendered to HTML at build time
-- [x] Syntax highlighting in code blocks -- technical answers are useless without this
-- [x] Mobile responsive layout -- must work on phones from day one
-- [x] 3-4 sections with 15-20 questions each -- enough content to be useful, not so much it delays launch
-- [x] Basic dark/light mode -- modern expectation, low effort with CSS custom properties
+### Add If Time Permits (v1.1 stretch)
 
-### Add After Validation (v1.x)
+- [ ] Type-specific border accent colors -- low effort (~5 lines), high visual impact
+- [ ] Tag filter UI -- schema supports it, PROJECT.md lists as active requirement
+- [ ] Pagefind search -- PROJECT.md lists as active, value grows with more content
 
-Features to add once core is working.
+### Defer (v1.2+)
 
-- [ ] Full-text search -- add once there are enough questions to make browsing insufficient
-- [ ] UA/EN language toggle -- add once UA content is written (can launch English-only first)
-- [ ] Tag filtering -- add once questions have tags in frontmatter and there are enough cross-cutting topics
-- [ ] Anchor links to individual questions -- add when users start sharing specific questions
-- [ ] Expand all / Collapse all -- add based on user feedback about study workflow
-- [ ] Keyboard navigation -- polish feature, add when core UX is solid
-
-### Future Consideration (v2+)
-
-Features to defer until product-market fit is established.
-
-- [ ] Print-friendly CSS -- low priority, add if users request it
-- [ ] localStorage "reviewed" markers -- only if users want progress tracking
-- [ ] PWA offline support -- only if mobile usage is significant
-- [ ] AI-generated practice explanations -- scope creep, defer indefinitely
+- [ ] Tag filter UI (if not done in v1.1)
+- [ ] Pagefind search (if not done in v1.1)
+- [ ] Solidity syntax highlighting -- known v1.0 tech debt, minor impact
+- [ ] Keyboard navigation enhancements
+- [ ] Print-friendly CSS
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Section pages with flashcards | HIGH | LOW | P1 |
-| Markdown content pipeline | HIGH | MEDIUM | P1 |
-| Syntax highlighting | HIGH | LOW | P1 |
-| Mobile responsive | HIGH | MEDIUM | P1 |
-| Dark/light mode | MEDIUM | LOW | P1 |
-| Home page with sections | HIGH | LOW | P1 |
-| Full-text search | HIGH | MEDIUM | P2 |
-| UA/EN language toggle | HIGH | MEDIUM | P2 |
-| Tag filtering | MEDIUM | MEDIUM | P2 |
-| Anchor links to questions | MEDIUM | LOW | P2 |
-| Expand/Collapse all | MEDIUM | LOW | P2 |
-| Keyboard navigation | LOW | LOW | P3 |
-| Print CSS | LOW | LOW | P3 |
-| localStorage progress | LOW | MEDIUM | P3 |
+| `type` field in schema | HIGH (enables everything) | LOW (one-line change) | P1 |
+| Content conventions document | HIGH (ensures consistency) | LOW (documentation only) | P1 |
+| 90 new content files | HIGH (the actual deliverable) | HIGH (content volume) | P1 |
+| Type badge in flashcard | HIGH (visual distinction) | LOW (~10 lines) | P1 |
+| Visual grouping by type | HIGH (scannable sections) | LOW (~20 lines) | P1 |
+| Type-specific border colors | MEDIUM (visual polish) | LOW (~5 lines) | P2 |
+| Tag filter UI | MEDIUM (cross-cutting discovery) | MEDIUM (new component + JS) | P2 |
+| Pagefind search | MEDIUM (find across sections) | MEDIUM (build integration + UI) | P2 |
+| Solidity highlighting fix | LOW (affects ~15 questions) | LOW (config change) | P3 |
 
 **Priority key:**
-- P1: Must have for launch
-- P2: Should have, add when possible
-- P3: Nice to have, future consideration
+- P1: Must have for v1.1 launch
+- P2: Should have, add if time permits within v1.1
+- P3: Nice to have, defer to future milestone
 
-## Competitor Feature Analysis
+## Content Structure Conventions (for 90 new questions)
 
-| Feature | IT Flashcards | devhints.io | Tech Interview Handbook (GitHub) | Our Approach |
-|---------|---------------|-------------|----------------------------------|--------------|
-| Content organization | 30+ tech categories | Flat cheatsheet list | Markdown chapters | Sections with tag cross-referencing |
-| Flashcard interaction | Flip card + quiz | None (reference only) | None (article format) | Click-to-reveal accordion |
-| Search | Category filter | Browser search only | GitHub search | Client-side full-text search |
-| Language support | 20+ languages | English only | English only | UA/EN toggle (underserved niche) |
-| Dark mode | No | No | GitHub default | Yes, with system preference detection |
-| Code formatting | Basic | Good (Kramdown) | GitHub Markdown | Syntax-highlighted code blocks |
-| Progress tracking | Quiz results | None | None | None (static site, intentionally omitted) |
-| Mobile experience | Good (has apps) | Passable | GitHub mobile | Designed mobile-first |
-| Design quality | Functional, dated | Clean, minimal | GitHub default | Modern, polished, animated |
-| Content source | Curated editorial | Community Markdown | Curated editorial | AI-generated, Markdown in git |
+### Deep Technical Questions (30 total: 5 per section)
+- **Nature:** Require understanding of internals, edge cases, performance characteristics, implementation details
+- **Question pattern:** "How does X work internally?", "What happens when Y?", "Explain the difference between X and Y at the implementation level"
+- **Answer pattern:** Detailed explanation with code examples, complexity analysis, internal mechanism walkthrough. Longer answers than basic questions (3-5 paragraphs + code).
+- **Example (Java):** "What happens internally when you call `HashMap.put()` with a key whose `hashCode()` collides with an existing entry?"
+- **Example (SQL):** "How does a database engine execute a query with multiple JOINs? Describe the query execution plan."
+- **Example (Kubernetes):** "What happens step-by-step when you run `kubectl apply -f deployment.yaml`?"
 
-**Key competitive advantages:**
-1. **UA/EN bilingual** -- no major competitor serves Ukrainian-speaking developers
-2. **Modern design polish** -- most competitors look utilitarian; good design builds trust and makes studying pleasant
-3. **Focused simplicity** -- not trying to be LeetCode or Anki; just a clean, fast Q&A reference
+### Trick/Gotcha Questions (30 total: 5 per section)
+- **Nature:** Questions designed to expose common misconceptions or subtle technical traps that even experienced developers get wrong
+- **Question pattern:** "What is the output of this code?", "Is this statement true or false?", "What's wrong with this approach?"
+- **Answer pattern:** Start with the common wrong answer using the "Trap:" callout, then explain the correct answer and *why* the misconception exists. Structure: wrong answer -> correct answer -> explanation of the trap.
+- **Content convention:** Every trick question answer MUST begin with `**Trap:** Most developers assume...` or similar phrasing that names the misconception before correcting it.
+- **Example (SQL):** "Does `WHERE column != NULL` filter out NULL values?" (Trap: it returns zero rows because any comparison with NULL yields NULL, not TRUE)
+- **Example (Docker):** "Can you remove a paused container?" (Trap: No, it must be stopped first)
+- **Example (Java):** "What does `new String('hello') == new String('hello')` return?" (Trap: false, because `==` compares references)
+
+### Practical Tasks/Scenarios (30 total: 5 per section)
+- **Nature:** Real-world problems requiring applied knowledge and problem-solving process, not just recall
+- **Question pattern:** "How would you...", "Design a...", "Debug this...", "Your production environment has X problem, walk through your approach"
+- **Answer pattern:** Structured multi-part format showing the thought process, not just the final answer
+- **Content convention:** Every practical task answer should follow this structure:
+  - `**Scenario:**` -- the real-world context and constraints
+  - `**Key considerations:**` -- what to think about before jumping to a solution
+  - `**Approach:**` -- step-by-step process
+  - `**Solution:**` -- concrete code/config/commands example
+- **Example (Docker):** "A container keeps restarting in CrashLoopBackOff. Walk through your debugging process."
+- **Example (Kubernetes):** "Design a zero-downtime deployment strategy for a stateful application."
+- **Example (Automation QA):** "You inherit a flaky test suite with 30% failure rate. How do you stabilize it?"
+
+## Competitor Feature Analysis (Advanced Question Handling)
+
+| Feature | IT Flashcards | DataCamp Guides | InterviewBit | Our Approach |
+|---------|---------------|-----------------|--------------|--------------|
+| Question type labels | None -- flat list by category | "Basic" / "Advanced" headers | "Easy" / "Medium" / "Hard" tags | Type-specific badges: deep-technical, trick, practical |
+| Trick question callouts | Not present | Mentions gotchas inline but inconsistently | Not structured | Explicit "Trap:" pattern in every trick question |
+| Practical task structure | Not present | Scenario-based questions but unstructured answers | Some scenario questions | Structured Scenario -> Considerations -> Approach -> Solution |
+| Visual distinction | None | Section headers only | Color-coded difficulty dots | Colored badge pills + border accent colors |
+| Bilingual advanced content | Not present | English only | English only | Full UA/EN for every advanced question |
+| Questions per section | Varies (50-200+) | 26-50 | 30-50+ | 30 per section (15 basic + 15 advanced) -- curated, not exhaustive |
 
 ## Sources
 
-- [IT Flashcards](https://www.itflashcards.com/) -- primary competitor with 2100+ questions, 30+ categories, 20+ languages
-- [devhints.io](https://devhints.io) -- developer cheatsheet reference site, clean minimal design
-- [Tech Interview Handbook](https://github.com/yangshun/tech-interview-handbook) -- popular open-source interview prep (GitHub)
-- [Tech Interview Cheat Sheet](https://github.com/tsiege/Tech-Interview-Cheat-Sheet) -- open-source cheat sheet
-- [Design Gurus - Coding Interview Cheatsheet](https://www.designgurus.io/blog/coding-interview-cheatsheet) -- comprehensive coding interview prep
-- [IGotAnOffer - Best Coding Interview Sites 2026](https://igotanoffer.com/en/advice/best-coding-interview-sites) -- platform comparison
-- [Skillora - Interview Preparation Websites 2026](https://skillora.ai/blog/interview-preparation-websites) -- market overview
-- [UI Patterns - FAQ Design Pattern](https://ui-patterns.com/patterns/frequently-asked-questions-faq) -- UX best practices for Q&A
+- [IT Flashcards](https://www.itflashcards.com/) -- competitor with 2179 questions, category-only organization
+- [Tech Interview Handbook](https://www.techinterviewhandbook.org/coding-interview-cheatsheet/) -- cheatsheet structure and best practices
+- [DataCamp Docker Interview Questions](https://www.datacamp.com/blog/docker-interview-questions) -- advanced Docker gotcha examples, basic/advanced split
+- [DataCamp Kubernetes Interview Questions](https://www.datacamp.com/blog/kubernetes-interview-questions) -- advanced K8s question patterns
+- [InterviewBit Kubernetes Questions](https://www.interviewbit.com/kubernetes-interview-questions/) -- hands-on question format
+- [hackajob Technical Assessment Guide](https://hackajob.com/talent/technical-assessment) -- interview format trends 2025
+- [InterviewQuery SQL Scenario Questions](https://www.interviewquery.com/p/sql-scenario-based-interview-questions) -- scenario-based question structure
 
 ---
-*Feature research for: Interview Q&A cheatsheet static site*
-*Researched: 2026-03-20*
+*Feature research for: Interview Cheatsheet v1.1 Advanced Questions*
+*Researched: 2026-03-21*
