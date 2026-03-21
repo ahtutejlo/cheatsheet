@@ -50,7 +50,7 @@ Exceptions: none
 | Body | 16px (text-base) | 400 (font-normal) | 1.625 (leading-relaxed) |
 | Label / Badge | 12px (text-xs) | 600 (font-semibold) | 1.0 (leading-none, inside badge pill) |
 | Group Heading | 18px (text-lg) | 600 (font-semibold) | 1.5 (leading-normal) |
-| Type Count | 14px (text-sm) | 500 (font-medium) | 1.5 (leading-normal) |
+| Type Count | 14px (text-sm) | 400 (font-normal) | 1.5 (leading-normal) |
 
 ---
 
@@ -152,13 +152,13 @@ Replaces the current single count line. Renders as a horizontal list of type cou
 <div class="flex flex-wrap items-center gap-3 mt-2">
   <span class="text-sm text-gray-600 dark:text-gray-400">{total} questions</span>
   <!-- Only rendered for non-zero types -->
-  <span class="inline-flex items-center gap-1 text-xs font-medium text-blue-700 dark:text-blue-300">
+  <span class="inline-flex items-center gap-1 text-xs font-normal text-blue-700 dark:text-blue-300">
     <span class="w-2 h-2 rounded-full bg-blue-500"></span> {n} Deep
   </span>
-  <span class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 dark:text-amber-300">
+  <span class="inline-flex items-center gap-1 text-xs font-normal text-amber-700 dark:text-amber-300">
     <span class="w-2 h-2 rounded-full bg-amber-500"></span> {n} Trick
   </span>
-  <span class="inline-flex items-center gap-1 text-xs font-medium text-green-700 dark:text-green-300">
+  <span class="inline-flex items-center gap-1 text-xs font-normal text-green-700 dark:text-green-300">
     <span class="w-2 h-2 rounded-full bg-green-500"></span> {n} Practical
   </span>
 </div>
