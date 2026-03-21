@@ -38,7 +38,7 @@ Declared values (must be multiples of 4). Inherited from existing codebase -- no
 | xs | 4px | Icon gaps, inline padding |
 | sm | 8px | Compact element spacing |
 | md | 16px | Default element spacing, card padding (p-4) |
-| lg | 20px | Card padding at sm breakpoint (p-5) |
+| lg | 24px | Section padding, card padding at sm breakpoint |
 | xl | 32px | Section group spacing (pt-8) |
 | 2xl | 48px | Page vertical padding (py-12 at sm) |
 | 3xl | 64px | Not used in current phase |
@@ -53,10 +53,9 @@ Inherited from existing Tailwind Typography plugin (`prose-sm` mobile, `prose-ba
 
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
-| Body (answer prose) | 14px mobile / 16px desktop | 400 (regular) | 1.5 |
-| Label (type badge) | 12px (text-xs) | 600 (semibold) | 1.5 |
+| Body (answer prose, question text) | 14px mobile / 16px desktop | 400 (regular) | 1.5 |
+| Label (type badge) | 12px (text-xs) | 700 (bold) | 1.5 |
 | Heading (section title) | 24px mobile / 30px desktop (text-2xl/text-3xl) | 700 (bold) | 1.2 |
-| Question text | 16px (text-base) | 500 (medium) | 1.625 (leading-relaxed) |
 
 ---
 
