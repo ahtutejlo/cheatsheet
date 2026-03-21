@@ -28,19 +28,53 @@ const sectionQuestions = allQuestions
   .filter(q => q.data.section === section)
   .sort((a, b) => a.data.order - b.data.order);
 
-// Map questions to the format Flashcard expects, selecting the correct locale
+const TYPE_ORDER = ['basic', 'deep', 'trick', 'practical'] as const;
+
 const questionKey = `${locale}_question` as const;
 const answerKey = `${locale}_answer` as const;
 
-const questions = sectionQuestions.map(q => {
-  // Extract slug from content entry ID (e.g., "qa/what-is-testing" -> "what-is-testing")
-  const slug = q.id.split('/').pop() || q.id;
-  return {
-    slug,
-    question: (q.data as any)[questionKey] as string,
-    answer: (q.data as any)[answerKey] as string,
-  };
-});
+// Group questions by type
+const grouped = TYPE_ORDER
+  .map(type => ({
+    type,
+    questions: sectionQuestions
+      .filter(q => (q.data.type || 'basic') === type)
+      .map(q => {
+        const slug = q.id.split('/').pop() || q.id;
+        return {
+          slug,
+          question: (q.data as any)[questionKey] as string,
+          answer: (q.data as any)[answerKey] as string,
+          type: (q.data.type || 'basic') as 'basic' | 'deep' | 'trick' | 'practical',
+        };
+      }),
+  }))
+  .filter(g => g.questions.length > 0);
+
+// Total count for header
+const totalCount = sectionQuestions.length;
+
+// Type counts for summary (only non-zero types)
+const typeCounts = TYPE_ORDER
+  .map(type => ({
+    type,
+    count: sectionQuestions.filter(q => (q.data.type || 'basic') === type).length,
+  }))
+  .filter(tc => tc.count > 0);
+
+// Color maps for type count dots
+const dotColors: Record<string, string> = {
+  basic: 'bg-gray-400',
+  deep: 'bg-blue-500',
+  trick: 'bg-amber-500',
+  practical: 'bg-green-500',
+};
+const textColors: Record<string, string> = {
+  basic: 'text-gray-600 dark:text-gray-400',
+  deep: 'text-blue-700 dark:text-blue-300',
+  trick: 'text-amber-700 dark:text-amber-300',
+  practical: 'text-green-700 dark:text-green-300',
+};
 ---
 <BaseLayout
   title={`${meta.name} - ${t(locale, 'site.title')}`}
@@ -62,12 +96,36 @@ const questions = sectionQuestions.map(q => {
         <div>
           <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">{meta.name}</h1>
           <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
-            {questions.length} {t(locale, 'section.questions')}
+            {totalCount} {t(locale, 'section.questions')}
           </p>
         </div>
       </div>
+      {typeCounts.length > 1 && (
+        <div class="flex flex-wrap items-center gap-3 mt-2 ml-12">
+          {typeCounts.map(tc => (
+              <span class={`inline-flex items-center gap-1 text-xs font-normal ${textColors[tc.type]}`}>
+                <span class={`w-2 h-2 rounded-full ${dotColors[tc.type]}`}></span>
+                {tc.count} {t(locale, `group.${tc.type}` as any)}
+              </span>
+          ))}
+        </div>
+      )}
     </div>
-    <FlashcardList questions={questions} locale={locale} />
+    {grouped.map((group, index) => (
+      <div>
+        {grouped.length > 1 && (
+          <div class:list={['flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700', index === 0 ? 'pt-0' : 'pt-8']}>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {t(locale, `group.${group.type}` as any)}
+            </h2>
+            <span class="text-sm text-gray-500 dark:text-gray-400">({group.questions.length})</span>
+          </div>
+        )}
+        <div class={grouped.length > 1 ? 'mt-4' : ''}>
+          <FlashcardList questions={group.questions} locale={locale} />
+        </div>
+      </div>
+    ))}
   </main>
 
   <!-- Anchor link handler: opens and scrolls to linked question -->
