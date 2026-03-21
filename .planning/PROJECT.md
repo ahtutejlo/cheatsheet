@@ -23,6 +23,7 @@
 ### Active
 
 - [x] 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL — Validated in Phase 02
+- [x] Перемикач мови UA/EN з localStorage persistence — Validated in Phase 03
 - [ ] Теги для питань (фільтрація за тегами)
 - [ ] Повнотекстовий пошук по питаннях і відповідях
 - [x] Сучасний дизайн з dark mode, анімаціями, яскравими акцентами — Validated in Phase 02
@@ -59,4 +60,4 @@
 | Мультимовність UA/EN | Ширша аудиторія, підготовка до англомовних співбесід | — Pending |
 
 ---
-*Last updated: 2026-03-21 after Phase 02 completion — dark/light mode, design polish, 7 sections with 15+ questions each*
+*Last updated: 2026-03-21 after Phase 03 completion — language toggle UI with localStorage persistence, root redirect respects stored locale*
