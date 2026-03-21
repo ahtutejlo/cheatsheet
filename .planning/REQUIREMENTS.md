@@ -19,9 +19,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### i18n
 
-- [ ] **I18N-01**: Перемикач мови UA/EN на всіх сторінках
-- [ ] **I18N-02**: Кожне питання має версію українською та англійською
-- [ ] **I18N-03**: UI елементи (навігація, кнопки) перекладені на обидві мови
+- [x] **I18N-01**: Перемикач мови UA/EN на всіх сторінках
+- [x] **I18N-02**: Кожне питання має версію українською та англійською
+- [x] **I18N-03**: UI елементи (навігація, кнопки) перекладені на обидві мови
 
 ### Design
 
@@ -77,9 +77,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CORE-05 | Phase 2 | Complete |
 | CORE-06 | Phase 1 | Complete |
 | CORE-07 | Phase 1 | Complete |
-| I18N-01 | Phase 3 | Pending |
-| I18N-02 | Phase 3 | Pending |
-| I18N-03 | Phase 3 | Pending |
+| I18N-01 | Phase 3 | Complete |
+| I18N-02 | Phase 3 | Complete |
+| I18N-03 | Phase 3 | Complete |
 | DSGN-01 | Phase 2 | Complete |
 | DSGN-02 | Phase 2 | Complete |
 | DSGN-03 | Phase 1 | Complete |

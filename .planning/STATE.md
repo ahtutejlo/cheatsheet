@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-21T15:14:36.549Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-21T15:41:02.667Z"
 progress:
   total_phases: 3
-  completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 3
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Будь-хто може швидко знайти та повторити ключові питання i вiдповiдi для підготовки до технічної співбесіди з потрібної теми.
-**Current focus:** Phase 02 — design-polish-full-content
+**Current focus:** Phase 03 — internationalization
 
 ## Current Position
 
-Phase: 02 (design-polish-full-content) — EXECUTING
-Plan: 3 of 3 -- COMPLETE
+Phase: 03 (internationalization) — COMPLETE
+Plan: 1 of 1 (done)
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Plan: 3 of 3 -- COMPLETE
 | Phase 02 P01 | 2min | 2 tasks | 9 files |
 | Phase 02 P03 | 8min | 2 tasks | 45 files |
 | Phase 02 P02 | 10min | 2 tasks | 51 files |
+| Phase 03 P01 | 5min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Used @custom-variant dark with class-based selector for Tailwind CSS 4 dark mode
 - [Phase 02]: Inline script in head for FOUC prevention reads localStorage before first paint
 - [Phase 02]: Kubernetes content uses YAML manifests and kubectl examples; Blockchain uses Solidity code blocks; SQL uses practical query examples
+- [Phase 03]: Used anchor tag with data-locale-switch attribute for language toggle
+- [Phase 03]: window.location.replace() for root redirect to avoid polluting browser history
 
 ### Pending Todos
 
@@ -85,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T15:11:45.418Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-21T15:41:02.665Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
