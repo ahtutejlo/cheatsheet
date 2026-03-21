@@ -92,7 +92,7 @@
 
 ## Known Tech Debt
 
-- Solidity code blocks у blockchain секції не мають підсвітки синтаксису (потрібно додати 'solidity' до langs array)
+None currently tracked.
 
 ---
-*Last updated: 2026-03-21 after milestone v1.1 started*
+*Last updated: 2026-03-21 after Phase 04 complete — type infrastructure and UI components added*
