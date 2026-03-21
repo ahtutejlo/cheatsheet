@@ -5,16 +5,18 @@ interface QuestionData {
   slug: string;
   question: string;
   answer: string;
+  type?: 'basic' | 'deep' | 'trick' | 'practical';
 }
 
 interface Props {
   questions: QuestionData[];
+  locale: 'ua' | 'en';
 }
 
-const { questions } = Astro.props;
+const { questions, locale } = Astro.props;
 ---
 <div class="flex flex-col gap-3">
   {questions.map(q => (
-    <Flashcard slug={q.slug} question={q.question} answer={q.answer} />
+    <Flashcard slug={q.slug} question={q.question} answer={q.answer} type={q.type} locale={locale} />
   ))}
 </div>

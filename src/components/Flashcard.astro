@@ -1,13 +1,16 @@
 ---
 import { renderMarkdown } from '../lib/markdown';
+import TypeBadge from './TypeBadge.astro';
 
 interface Props {
   slug: string;
   question: string;
   answer: string;  // Markdown string
+  type?: 'basic' | 'deep' | 'trick' | 'practical';
+  locale: 'ua' | 'en';
 }
 
-const { slug, question, answer } = Astro.props;
+const { slug, question, answer, type = 'basic', locale } = Astro.props;
 const answerHtml = await renderMarkdown(answer);
 ---
 <details class="flashcard group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden" id={slug}>
@@ -15,6 +18,7 @@ const answerHtml = await renderMarkdown(answer);
                    hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
                    min-h-[44px] flex items-center gap-3 list-none">
     <span class="flex-1 text-base leading-relaxed">{question}</span>
+    {type !== 'basic' && <TypeBadge type={type} locale={locale} />}
     <a href={`#${slug}`}
        class="text-gray-300 dark:text-gray-600 hover:text-blue-500 dark:hover:text-blue-400 transition-colors shrink-0"
        onclick="event.stopPropagation()"
