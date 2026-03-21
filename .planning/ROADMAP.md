@@ -42,11 +42,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Each flashcard shows a colored type badge (Deep / Trick / Practical) when the question has a non-basic type
   4. Questions on a section page are visually grouped by type (Basic, then Deep, then Trick, then Practical) with a count per type visible
   5. A content conventions document exists that defines the structure for each question type (Trap callout for tricks, Scenario/Approach/Solution for practicals)
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — Schema type field, Shiki solidity/python, i18n keys, content conventions doc
+- [ ] 04-02-PLAN.md — TypeBadge component, type grouping on section pages, type count summary
 
 ### Phase 5: Content Generation
 **Goal**: Users can study 90 new advanced bilingual questions covering deep-technical concepts, common traps, and practical scenarios across 6 sections
@@ -87,6 +87,6 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 1. Content Foundation and Core Flashcard UI | v1.0 | 3/3 | Complete | 2026-03-20 |
 | 2. Design Polish and Full Content | v1.0 | 3/3 | Complete | 2026-03-21 |
 | 3. Internationalization | v1.0 | 1/1 | Complete | 2026-03-21 |
-| 4. Infrastructure and UI | v1.1 | 0/? | Not started | - |
+| 4. Infrastructure and UI | v1.1 | 0/2 | Not started | - |
 | 5. Content Generation | v1.1 | 0/? | Not started | - |
 | 6. Search and Filter | v1.1 | 0/? | Not started | - |
