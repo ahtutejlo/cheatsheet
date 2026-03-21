@@ -13,7 +13,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CORE-02**: Сторінка розділу відображає список питань у форматі флешкарток
 - [x] **CORE-03**: Клік/тап на флешкартку розкриває приховану відповідь з плавною анімацією
 - [x] **CORE-04**: Відповіді підтримують Markdown з підсвіткою синтаксису коду
-- [ ] **CORE-05**: 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL
+- [x] **CORE-05**: 5-7 розділів на старті: QA, Automation QA, Java, Kubernetes, Blockchain, Docker, SQL
 - [x] **CORE-06**: Контент зберігається у Markdown-файлах з frontmatter метаданими
 - [x] **CORE-07**: Якірні посилання на окремі питання (bookmark/share)
 
@@ -74,7 +74,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CORE-02 | Phase 1 | Complete |
 | CORE-03 | Phase 1 | Complete |
 | CORE-04 | Phase 1 | Complete |
-| CORE-05 | Phase 2 | Pending |
+| CORE-05 | Phase 2 | Complete |
 | CORE-06 | Phase 1 | Complete |
 | CORE-07 | Phase 1 | Complete |
 | I18N-01 | Phase 3 | Pending |
