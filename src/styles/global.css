@@ -1,22 +1,22 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Dark mode for Shiki code blocks (class-based for future toggle) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-accent-50: #eff6ff;
+  --color-accent-100: #dbeafe;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-accent-700: #1d4ed8;
+}
+
+/* Dark mode for Shiki code blocks */
 html.dark .astro-code,
 html.dark .shiki,
 html.dark .astro-code span,
 html.dark .shiki span {
   color: var(--shiki-dark) !important;
   background-color: var(--shiki-dark-bg) !important;
-}
-
-/* Also support prefers-color-scheme for Phase 1 (no toggle yet) */
-@media (prefers-color-scheme: dark) {
-  .astro-code,
-  .shiki,
-  .astro-code span,
-  .shiki span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-  }
 }

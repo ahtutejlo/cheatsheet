@@ -17,9 +17,17 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <script is:inline>
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
     <title>{title}</title>
   </head>
-  <body class="min-h-screen bg-white text-gray-900 antialiased">
+  <body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased transition-colors duration-200">
     <slot />
   </body>
 </html>
