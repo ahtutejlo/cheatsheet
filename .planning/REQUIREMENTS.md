@@ -45,15 +45,15 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 
 ### Content — Docker
 
-- [ ] **CONT-13**: 5 глибоких технічних питань для Docker (білінгвальні UA/EN)
-- [ ] **CONT-14**: 5 питань-пасток для Docker (білінгвальні UA/EN)
-- [ ] **CONT-15**: 5 практичних задач для Docker (білінгвальні UA/EN)
+- [x] **CONT-13**: 5 глибоких технічних питань для Docker (білінгвальні UA/EN)
+- [x] **CONT-14**: 5 питань-пасток для Docker (білінгвальні UA/EN)
+- [x] **CONT-15**: 5 практичних задач для Docker (білінгвальні UA/EN)
 
 ### Content — SQL
 
-- [ ] **CONT-16**: 5 глибоких технічних питань для SQL (білінгвальні UA/EN)
-- [ ] **CONT-17**: 5 питань-пасток для SQL (білінгвальні UA/EN)
-- [ ] **CONT-18**: 5 практичних задач для SQL (білінгвальні UA/EN)
+- [x] **CONT-16**: 5 глибоких технічних питань для SQL (білінгвальні UA/EN)
+- [x] **CONT-17**: 5 питань-пасток для SQL (білінгвальні UA/EN)
+- [x] **CONT-18**: 5 практичних задач для SQL (білінгвальні UA/EN)
 
 ### Search & Filter
 
@@ -100,12 +100,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-10 | Phase 5 | Pending |
 | CONT-11 | Phase 5 | Pending |
 | CONT-12 | Phase 5 | Pending |
-| CONT-13 | Phase 5 | Pending |
-| CONT-14 | Phase 5 | Pending |
-| CONT-15 | Phase 5 | Pending |
-| CONT-16 | Phase 5 | Pending |
-| CONT-17 | Phase 5 | Pending |
-| CONT-18 | Phase 5 | Pending |
+| CONT-13 | Phase 5 | Complete |
+| CONT-14 | Phase 5 | Complete |
+| CONT-15 | Phase 5 | Complete |
+| CONT-16 | Phase 5 | Complete |
+| CONT-17 | Phase 5 | Complete |
+| CONT-18 | Phase 5 | Complete |
 | SRCH-01 | Phase 6 | Pending |
 | SRCH-02 | Phase 6 | Pending |
 
