@@ -1,6 +1,7 @@
 ---
 import { renderMarkdown } from '../lib/markdown';
 import TypeBadge from './TypeBadge.astro';
+import TagBadge from './TagBadge.astro';
 
 interface Props {
   slug: string;
@@ -8,32 +9,42 @@ interface Props {
   answer: string;  // Markdown string
   type?: 'basic' | 'deep' | 'trick' | 'practical';
   locale: 'ua' | 'en';
+  tags?: string[];
 }
 
-const { slug, question, answer, type = 'basic', locale } = Astro.props;
+const { slug, question, answer, type = 'basic', locale, tags = [] } = Astro.props;
 const answerHtml = await renderMarkdown(answer);
 ---
-<details class="flashcard group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden" id={slug}>
+<details class="flashcard group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden" id={slug} data-tags={tags.join(',')}>
   <summary class="cursor-pointer select-none p-4 sm:p-5 font-medium text-gray-900 dark:text-gray-100
                    hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
                    min-h-[44px] flex items-center gap-3 list-none">
-    <span class="flex-1 text-base leading-relaxed">{question}</span>
-    {type !== 'basic' && <TypeBadge type={type} locale={locale} />}
-    <a href={`#${slug}`}
-       class="text-gray-300 dark:text-gray-600 hover:text-blue-500 dark:hover:text-blue-400 transition-colors shrink-0"
-       onclick="event.stopPropagation()"
-       aria-label="Link to this question">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-1.102-4.242a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.1-1.1" />
-      </svg>
-    </a>
-    <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform duration-200 group-open:rotate-180 shrink-0"
-         viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd"
-            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-            clip-rule="evenodd" />
-    </svg>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-3">
+        <span class="flex-1 text-base leading-relaxed">{question}</span>
+        {type !== 'basic' && <TypeBadge type={type} locale={locale} />}
+        <a href={`#${slug}`}
+           class="text-gray-300 dark:text-gray-600 hover:text-blue-500 dark:hover:text-blue-400 transition-colors shrink-0"
+           onclick="event.stopPropagation()"
+           aria-label="Link to this question">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-1.102-4.242a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.1-1.1" />
+          </svg>
+        </a>
+        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform duration-200 group-open:rotate-180 shrink-0"
+             viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd" />
+        </svg>
+      </div>
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-1 mt-2">
+          {tags.map(tag => <TagBadge tag={tag} />)}
+        </div>
+      )}
+    </div>
   </summary>
   <div class="flashcard-answer border-t border-gray-200 dark:border-gray-700 p-4 sm:p-5
               prose prose-sm sm:prose-base max-w-none dark:prose-invert
