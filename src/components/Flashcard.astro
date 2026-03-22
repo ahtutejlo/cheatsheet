@@ -15,13 +15,13 @@ interface Props {
 const { slug, question, answer, type = 'basic', locale, tags = [] } = Astro.props;
 const answerHtml = await renderMarkdown(answer);
 ---
-<details class="flashcard group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden" id={slug} data-tags={tags.join(',')}>
+<details class="flashcard group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden" data-tags={tags.join(',')}>
   <summary class="cursor-pointer select-none p-4 sm:p-5 font-medium text-gray-900 dark:text-gray-100
                    hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
                    min-h-[44px] flex items-center gap-3 list-none">
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-3">
-        <span class="flex-1 text-base leading-relaxed">{question}</span>
+        <h3 id={slug} class="flex-1 text-base leading-relaxed font-normal">{question}</h3>
         {type !== 'basic' && <TypeBadge type={type} locale={locale} />}
         <a href={`#${slug}`}
            class="text-gray-300 dark:text-gray-600 hover:text-blue-500 dark:hover:text-blue-400 transition-colors shrink-0"

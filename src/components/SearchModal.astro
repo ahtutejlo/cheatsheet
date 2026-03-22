@@ -1,0 +1,178 @@
+---
+import { t, type Locale } from '../i18n/utils';
+import { sections } from '../i18n/sections';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Build a slug→{name, icon} map for the current locale to use in client JS
+const sectionMap: Record<string, { name: string; icon: string }> = {};
+for (const [slug, locales] of Object.entries(sections)) {
+  const meta = locales[locale];
+  sectionMap[slug] = { name: meta.name, icon: meta.icon };
+}
+---
+<div id="search-overlay" class="fixed inset-0 z-50 hidden bg-black/40 dark:bg-black/60" aria-modal="true" role="dialog">
+  <div class="mx-4 mt-[20vh] sm:mx-auto sm:max-w-xl">
+    <div id="search-modal" class="rounded-xl bg-white dark:bg-gray-800 shadow-2xl overflow-hidden">
+      <div class="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          class="flex-1 bg-transparent text-base text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 outline-none"
+          placeholder={t(locale, 'search.placeholder')}
+          autocomplete="off"
+        />
+      </div>
+      <div id="search-results" class="max-h-80 overflow-y-auto">
+        <div id="search-initial" class="px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">
+          {locale === 'ua' ? 'Почніть вводити для пошуку' : 'Start typing to search'}
+        </div>
+        <div id="search-empty" class="hidden px-4 py-8 text-center text-sm text-gray-400 dark:text-gray-500">
+          {t(locale, 'search.noResults')}
+        </div>
+        <div id="search-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ base, locale, sectionMap }}>
+  let pagefind = null;
+  let debounceTimer = null;
+
+  const overlay = document.getElementById('search-overlay');
+  const modal = document.getElementById('search-modal');
+  const input = document.getElementById('search-input');
+  const resultsList = document.getElementById('search-list');
+  const initialMsg = document.getElementById('search-initial');
+  const emptyMsg = document.getElementById('search-empty');
+
+  async function loadPagefind() {
+    if (pagefind) return pagefind;
+    try {
+      pagefind = await import(base + '/pagefind/pagefind.js');
+      await pagefind.init();
+      return pagefind;
+    } catch (e) {
+      console.error('Failed to load Pagefind:', e);
+      return null;
+    }
+  }
+
+  function openModal() {
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    input.value = '';
+    resultsList.replaceChildren();
+    initialMsg.classList.remove('hidden');
+    emptyMsg.classList.add('hidden');
+    input.focus();
+    loadPagefind();
+  }
+
+  function closeModal() {
+    overlay.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function createResultItem(title, sectionIcon, sectionName, url) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.className = 'block px-4 py-3 border-b border-gray-100 dark:border-gray-700/50 hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors cursor-pointer';
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'text-sm font-medium text-gray-900 dark:text-gray-100';
+    titleDiv.textContent = title;
+    a.appendChild(titleDiv);
+
+    if (sectionName) {
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'text-xs text-gray-500 dark:text-gray-400 mt-0.5';
+      metaDiv.textContent = sectionIcon + ' ' + sectionName;
+      a.appendChild(metaDiv);
+    }
+
+    a.addEventListener('click', () => closeModal());
+    return a;
+  }
+
+  async function doSearch(query) {
+    const pf = await loadPagefind();
+    if (!pf) return;
+
+    if (!query.trim()) {
+      resultsList.replaceChildren();
+      initialMsg.classList.remove('hidden');
+      emptyMsg.classList.add('hidden');
+      return;
+    }
+
+    initialMsg.classList.add('hidden');
+
+    const search = await pf.search(query);
+    const results = await Promise.all(
+      search.results.slice(0, 20).map(r => r.data())
+    );
+
+    resultsList.replaceChildren();
+
+    if (results.length === 0) {
+      emptyMsg.classList.remove('hidden');
+      return;
+    }
+
+    emptyMsg.classList.add('hidden');
+
+    const fragment = document.createDocumentFragment();
+    results.forEach(result => {
+      // Extract section slug from URL: /cheatsheet/ua/docker/ → docker
+      const urlParts = result.url.replace(base, '').split('/').filter(Boolean);
+      const sectionSlug = urlParts[1] || ''; // [locale, section]
+      const sec = sectionMap[sectionSlug];
+      const sectionName = sec?.name || '';
+      const sectionIcon = sec?.icon || '';
+
+      const items = result.sub_results && result.sub_results.length > 0
+        ? result.sub_results
+        : [{ title: result.meta?.title || '', url: result.url }];
+
+      items.forEach(item => {
+        fragment.appendChild(
+          createResultItem(item.title, sectionIcon, sectionName, item.url)
+        );
+      });
+    });
+    resultsList.appendChild(fragment);
+  }
+
+  // Debounced input handler
+  input?.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => doSearch(input.value), 300);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !overlay.classList.contains('hidden')) {
+      closeModal();
+    }
+  });
+
+  // Close on backdrop click
+  overlay?.addEventListener('click', (e) => {
+    if (!modal.contains(e.target)) {
+      closeModal();
+    }
+  });
+
+  // Listen for search-open event from Header button
+  document.addEventListener('search-open', openModal);
+</script>

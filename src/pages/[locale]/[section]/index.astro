@@ -147,16 +147,18 @@ const textColors: Record<string, string> = {
       const target = document.getElementById(hash.slice(1));
       if (!target) return;
 
-      // Open the details element if it's a flashcard
-      if (target.tagName === 'DETAILS') {
-        (target as HTMLDetailsElement).open = true;
+      // Open the parent details element if target is inside a flashcard
+      const details = target.closest('details') || (target.tagName === 'DETAILS' ? target : null);
+      if (details) {
+        (details as HTMLDetailsElement).open = true;
       }
 
       // Scroll to target with a short delay to allow details to open
+      const scrollTarget = details || target;
       setTimeout(() => {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        target.classList.add('highlight');
-        setTimeout(() => target.classList.remove('highlight'), 2000);
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollTarget.classList.add('highlight');
+        setTimeout(() => scrollTarget.classList.remove('highlight'), 2000);
       }, 100);
     }
 
