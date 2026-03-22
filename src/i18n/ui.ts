@@ -20,6 +20,12 @@ export const ui = {
     'group.deep': 'Глибокі технічні',
     'group.trick': 'Питання-пастки',
     'group.practical': 'Практичні задачі',
+    'search.title': 'Пошук',
+    'search.label': 'Пошук',
+    'search.placeholder': 'Шукати питання та відповіді...',
+    'search.noResults': 'Нічого не знайдено',
+    'filter.showAll': 'Показати всі',
+    'filter.activeLabel': 'Фільтр',
   },
   en: {
     'site.title': 'Interview Cheatsheet',
@@ -42,6 +48,12 @@ export const ui = {
     'group.deep': 'Deep Technical',
     'group.trick': 'Trick Questions',
     'group.practical': 'Practical Scenarios',
+    'search.title': 'Search',
+    'search.label': 'Search',
+    'search.placeholder': 'Search questions and answers...',
+    'search.noResults': 'No results found',
+    'filter.showAll': 'Show all',
+    'filter.activeLabel': 'Filtered by',
   },
 } as const;
 
