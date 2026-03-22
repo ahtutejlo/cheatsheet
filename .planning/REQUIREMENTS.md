@@ -33,9 +33,9 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 
 ### Content — Kubernetes
 
-- [ ] **CONT-07**: 5 глибоких технічних питань для Kubernetes (білінгвальні UA/EN)
-- [ ] **CONT-08**: 5 питань-пасток для Kubernetes (білінгвальні UA/EN)
-- [ ] **CONT-09**: 5 практичних задач для Kubernetes (білінгвальні UA/EN)
+- [x] **CONT-07**: 5 глибоких технічних питань для Kubernetes (білінгвальні UA/EN)
+- [x] **CONT-08**: 5 питань-пасток для Kubernetes (білінгвальні UA/EN)
+- [x] **CONT-09**: 5 практичних задач для Kubernetes (білінгвальні UA/EN)
 
 ### Content — Blockchain
 
@@ -94,9 +94,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-04 | Phase 5 | Pending |
 | CONT-05 | Phase 5 | Pending |
 | CONT-06 | Phase 5 | Pending |
-| CONT-07 | Phase 5 | Pending |
-| CONT-08 | Phase 5 | Pending |
-| CONT-09 | Phase 5 | Pending |
+| CONT-07 | Phase 5 | Complete |
+| CONT-08 | Phase 5 | Complete |
+| CONT-09 | Phase 5 | Complete |
 | CONT-10 | Phase 5 | Pending |
 | CONT-11 | Phase 5 | Pending |
 | CONT-12 | Phase 5 | Pending |
