@@ -27,9 +27,9 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 
 ### Content — Java
 
-- [ ] **CONT-04**: 5 глибоких технічних питань для Java (білінгвальні UA/EN)
-- [ ] **CONT-05**: 5 питань-пасток для Java (білінгвальні UA/EN)
-- [ ] **CONT-06**: 5 практичних задач для Java (білінгвальні UA/EN)
+- [x] **CONT-04**: 5 глибоких технічних питань для Java (білінгвальні UA/EN)
+- [x] **CONT-05**: 5 питань-пасток для Java (білінгвальні UA/EN)
+- [x] **CONT-06**: 5 практичних задач для Java (білінгвальні UA/EN)
 
 ### Content — Kubernetes
 
@@ -39,9 +39,9 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 
 ### Content — Blockchain
 
-- [ ] **CONT-10**: 5 глибоких технічних питань для Blockchain (білінгвальні UA/EN)
-- [ ] **CONT-11**: 5 питань-пасток для Blockchain (білінгвальні UA/EN)
-- [ ] **CONT-12**: 5 практичних задач для Blockchain (білінгвальні UA/EN)
+- [x] **CONT-10**: 5 глибоких технічних питань для Blockchain (білінгвальні UA/EN)
+- [x] **CONT-11**: 5 питань-пасток для Blockchain (білінгвальні UA/EN)
+- [x] **CONT-12**: 5 практичних задач для Blockchain (білінгвальні UA/EN)
 
 ### Content — Docker
 
@@ -91,15 +91,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-01 | Phase 5 | Complete |
 | CONT-02 | Phase 5 | Complete |
 | CONT-03 | Phase 5 | Complete |
-| CONT-04 | Phase 5 | Pending |
-| CONT-05 | Phase 5 | Pending |
-| CONT-06 | Phase 5 | Pending |
+| CONT-04 | Phase 5 | Complete |
+| CONT-05 | Phase 5 | Complete |
+| CONT-06 | Phase 5 | Complete |
 | CONT-07 | Phase 5 | Complete |
 | CONT-08 | Phase 5 | Complete |
 | CONT-09 | Phase 5 | Complete |
-| CONT-10 | Phase 5 | Pending |
-| CONT-11 | Phase 5 | Pending |
-| CONT-12 | Phase 5 | Pending |
+| CONT-10 | Phase 5 | Complete |
+| CONT-11 | Phase 5 | Complete |
+| CONT-12 | Phase 5 | Complete |
 | CONT-13 | Phase 5 | Complete |
 | CONT-14 | Phase 5 | Complete |
 | CONT-15 | Phase 5 | Complete |

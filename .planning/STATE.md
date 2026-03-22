@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Advanced Questions
 status: unknown
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-03-22T13:17:00.961Z"
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-03-22T13:17:23.781Z"
 progress:
   total_phases: 3
   completed_phases: 2
@@ -65,6 +65,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 04]: Color maps moved to Astro frontmatter to avoid TypeScript generics in template expressions
 - [Phase 05]: Content follows CONTENT_CONVENTIONS.md patterns exactly, Java for all automation-qa code examples
 - [Phase 05]: [Phase 05-06]: PostgreSQL-centric SQL examples with MySQL/SQL Server comparison notes
+- [Phase 05-02]: Removed 5 stale untracked Java files with conflicting order numbers before creating advanced content
+- [Phase 05]: [Phase 05-04]: Solidity code blocks with JS/ethers.js for client-side, real-world exploit references for credibility
 
 ### Pending Todos
 
@@ -76,6 +78,6 @@ Decisions are logged in PROJECT.md Key Decisions table.
 
 ## Session Continuity
 
-Last session: 2026-03-22T13:16:53.711Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-03-22T13:17:22.533Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None
