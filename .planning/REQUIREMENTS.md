@@ -58,7 +58,7 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 ### Search & Filter
 
 - [x] **SRCH-01**: Користувач може шукати по всіх питаннях і відповідях (Pagefind)
-- [ ] **SRCH-02**: Користувач може фільтрувати питання за тегами
+- [x] **SRCH-02**: Користувач може фільтрувати питання за тегами
 
 ## Future Requirements
 
@@ -107,7 +107,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONT-17 | Phase 5 | Complete |
 | CONT-18 | Phase 5 | Complete |
 | SRCH-01 | Phase 6 | Complete |
-| SRCH-02 | Phase 6 | Pending |
+| SRCH-02 | Phase 6 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 24 total

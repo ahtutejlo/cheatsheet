@@ -27,8 +27,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Milestone Goal:** Add 90 advanced questions (deep-technical, trick, practical) to 6 sections with type-based UI grouping and search
 
 - [x] **Phase 4: Infrastructure and UI** - Schema type field, Shiki language fixes, content conventions, type badges, and visual grouping (completed 2026-03-21)
-- [ ] **Phase 5: Content Generation** - 90 bilingual advanced questions across 6 sections (15 per section)
-- [ ] **Phase 6: Search and Filter** - Full-text search via Pagefind and tag-based filtering
+- [x] **Phase 5: Content Generation** - 90 bilingual advanced questions across 6 sections (15 per section) (completed 2026-03-22)
+- [x] **Phase 6: Search and Filter** - Full-text search via Pagefind and tag-based filtering (completed 2026-03-22)
 
 ## Phase Details
 
@@ -79,8 +79,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Pagefind integration, search page, search icon in header, content indexing markup
-- [ ] 06-02-PLAN.md — TagBadge component, tag rendering on flashcards, client-side tag filtering with filter bar
+- [x] 06-01-PLAN.md — Pagefind integration, search page, search icon in header, content indexing markup
+- [x] 06-02-PLAN.md — TagBadge component, tag rendering on flashcards, client-side tag filtering with filter bar
 
 ## Progress
 
@@ -94,4 +94,4 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 3. Internationalization | v1.0 | 1/1 | Complete | 2026-03-21 |
 | 4. Infrastructure and UI | 2/2 | Complete   | 2026-03-21 | - |
 | 5. Content Generation | v1.1 | 0/6 | Not started | - |
-| 6. Search and Filter | v1.1 | 0/2 | Not started | - |
+| 6. Search and Filter | v1.1 | 2/2 | Complete | 2026-03-22 |
