@@ -22,7 +22,7 @@
 **Shipped:** v1.0 (2026-03-21)
 **Live:** GitHub Pages via CI/CD (push to main → auto deploy)
 **Stack:** Astro 6, Tailwind CSS 4, Shiki, GitHub Actions
-**Content:** 105 bilingual flashcards across 7 sections (15 per section)
+**Content:** 195 bilingual flashcards across 7 sections (15 basic + 15 advanced per 6 sections, 15 basic for QA)
 **Source:** 567 LOC (Astro/TS/CSS)
 
 ## Requirements
@@ -49,7 +49,7 @@
 
 ### Active
 
-- [ ] 90 нових питань підвищеної складності (глибокі технічні, пастки, практичні задачі) для 6 розділів
+- ✓ 90 нових питань підвищеної складності (глибокі технічні, пастки, практичні задачі) для 6 розділів — Phase 05
 - [ ] Теги для питань (фільтрація за тегами)
 - [ ] Повнотекстовий пошук по питаннях і відповідях (Pagefind)
 
@@ -95,4 +95,4 @@
 None currently tracked.
 
 ---
-*Last updated: 2026-03-21 after Phase 04 complete — type infrastructure and UI components added*
+*Last updated: 2026-03-22 after Phase 05 complete — 90 advanced bilingual questions added across 6 sections*
