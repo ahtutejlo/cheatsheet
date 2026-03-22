@@ -5,6 +5,7 @@ import Header from '../../../components/Header.astro';
 import FlashcardList from '../../../components/FlashcardList.astro';
 import { t, localePath, type Locale, locales } from '../../../i18n/utils';
 import { getSectionMeta, getAllSectionSlugs } from '../../../i18n/sections';
+import { getSectionColor, typeDotClasses, typeTextClasses } from '../../../lib/colors';
 
 export async function getStaticPaths() {
   const sectionSlugs = getAllSectionSlugs();
@@ -18,6 +19,7 @@ export async function getStaticPaths() {
 
 const { locale, section } = Astro.params as { locale: Locale; section: string };
 const meta = getSectionMeta(section, locale);
+const sectionColor = getSectionColor(section);
 
 if (!meta) {
   return Astro.redirect(localePath(locale));
@@ -63,19 +65,6 @@ const typeCounts = TYPE_ORDER
   }))
   .filter(tc => tc.count > 0);
 
-// Color maps for type count dots
-const dotColors: Record<string, string> = {
-  basic: 'bg-gray-400',
-  deep: 'bg-blue-500',
-  trick: 'bg-amber-500',
-  practical: 'bg-green-500',
-};
-const textColors: Record<string, string> = {
-  basic: 'text-gray-600 dark:text-gray-400',
-  deep: 'text-blue-700 dark:text-blue-300',
-  trick: 'text-amber-700 dark:text-amber-300',
-  practical: 'text-green-700 dark:text-green-300',
-};
 ---
 <BaseLayout
   title={`${meta.name} - ${t(locale, 'site.title')}`}
@@ -93,9 +82,14 @@ const textColors: Record<string, string> = {
         {t(locale, 'section.back')}
       </a>
       <div class="flex items-center gap-3">
-        <span class="text-3xl" role="img" aria-hidden="true">{meta.icon}</span>
+        <div
+          class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
+          style={`background: linear-gradient(135deg, ${sectionColor.gradientFrom}, ${sectionColor.gradientTo});`}
+        >
+          <span class="text-xl" role="img" aria-hidden="true">{meta.icon}</span>
+        </div>
         <div>
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">{meta.name}</h1>
+          <h1 class="text-2xl font-extrabold text-gray-900 dark:text-gray-100 sm:text-3xl">{meta.name}</h1>
           <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
             {totalCount} {t(locale, 'section.questions')}
           </p>
@@ -104,20 +98,23 @@ const textColors: Record<string, string> = {
       {typeCounts.length > 1 && (
         <div class="flex flex-wrap items-center gap-3 mt-2 ml-12">
           {typeCounts.map(tc => (
-              <span class={`inline-flex items-center gap-1 text-xs font-normal ${textColors[tc.type]}`}>
-                <span class={`w-2 h-2 rounded-full ${dotColors[tc.type]}`}></span>
+              <span class={`inline-flex items-center gap-1 text-xs font-normal ${typeTextClasses[tc.type]}`}>
+                <span class={`w-2 h-2 rounded-full ${typeDotClasses[tc.type]}`}></span>
                 {tc.count} {t(locale, `group.${tc.type}` as any)}
               </span>
           ))}
         </div>
       )}
     </div>
-    <div id="filter-bar" class="hidden mb-4 flex items-center gap-2 text-sm" data-pagefind-ignore>
-      <span class="text-gray-600 dark:text-gray-400">
-        {t(locale, 'filter.activeLabel')}:
-        <span id="filter-tag-name" class="font-medium text-gray-900 dark:text-gray-100"></span>
-      </span>
-      <button id="clear-filter" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+    <div id="filter-bar" class="hidden mb-4 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl flex items-center justify-between text-sm" data-pagefind-ignore>
+      <div class="flex items-center gap-2">
+        <span class="text-base">🏷️</span>
+        <span class="text-blue-800 dark:text-blue-300 font-medium">
+          {t(locale, 'filter.activeLabel')}:
+          <span id="filter-tag-name" class="font-semibold"></span>
+        </span>
+      </div>
+      <button id="clear-filter" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors">
         {t(locale, 'filter.showAll')}
       </button>
     </div>
@@ -194,15 +191,9 @@ const textColors: Record<string, string> = {
         document.querySelectorAll('.tag-filter').forEach(btn => {
           const btnTag = (btn as HTMLElement).dataset.tag;
           const isActive = btnTag === tag;
-          btn.classList.toggle('bg-blue-500', isActive);
-          btn.classList.toggle('text-white', isActive);
-          btn.classList.toggle('dark:bg-blue-600', isActive);
-          btn.classList.toggle('dark:text-white', isActive);
-          // Remove default classes when active
-          btn.classList.toggle('bg-gray-100', !isActive);
-          btn.classList.toggle('text-gray-600', !isActive);
-          btn.classList.toggle('dark:bg-gray-700', !isActive);
-          btn.classList.toggle('dark:text-gray-300', !isActive);
+          btn.classList.toggle('ring-2', isActive);
+          btn.classList.toggle('ring-blue-500', isActive);
+          btn.classList.toggle('scale-110', isActive);
         });
 
         // Show/hide flashcards
