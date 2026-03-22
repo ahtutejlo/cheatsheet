@@ -86,7 +86,7 @@ en_answer: |
 
   Proper architecture reduces test maintenance time, simplifies onboarding of new team members, and ensures stable scaling.
 section: "automation-qa"
-order: 17
+order: 12
 tags:
   - test-architecture
   - scaling

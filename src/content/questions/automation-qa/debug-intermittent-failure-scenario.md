@@ -110,7 +110,7 @@ en_answer: |
   }
   ```
 section: "automation-qa"
-order: 26
+order: 15
 tags:
   - debugging
   - ci-cd

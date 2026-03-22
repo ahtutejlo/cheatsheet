@@ -114,7 +114,7 @@ en_answer: |
 
   This misconception persists because order-dependent tests "work" for months until someone tries to add parallelization or run a single test in isolation.
 section: "automation-qa"
-order: 25
+order: 14
 tags:
   - test-isolation
   - test-design

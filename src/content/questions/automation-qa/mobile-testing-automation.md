@@ -74,7 +74,7 @@ en_answer: |
 
   Cloud device farms are used for device coverage: **BrowserStack**, **Sauce Labs**, **AWS Device Farm**.
 section: "automation-qa"
-order: 15
+order: 10
 tags:
   - mobile-testing
   - appium

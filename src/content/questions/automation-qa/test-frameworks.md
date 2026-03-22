@@ -52,7 +52,7 @@ en_answer: |
 
   The choice of framework depends on the project's programming language, type of testing, and team needs.
 section: "automation-qa"
-order: 11
+order: 6
 tags:
   - frameworks
   - tools

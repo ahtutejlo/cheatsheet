@@ -84,7 +84,7 @@ en_answer: |
 
   BDD improves communication between business, developers, and testers, creating "living documentation".
 section: "automation-qa"
-order: 13
+order: 8
 tags:
   - bdd
   - cucumber

@@ -78,7 +78,7 @@ en_answer: |
   }
   ```
 section: "automation-qa"
-order: 6
+order: 4
 tags:
   - design-patterns
   - page-object
