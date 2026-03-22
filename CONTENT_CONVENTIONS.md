@@ -94,6 +94,7 @@ The `order` field controls display sequence within a section.
 
 - **Existing v1.0 sections** (Java, Docker, Kubernetes, Blockchain, SQL) use orders 1-15 for basic questions, 16+ for advanced
 - **New sections** (Python, Playwright, Performance Testing) start ordering at 1 since they have no legacy content
+- For sections with distinct topic groups (e.g., Python core language + testing ecosystem), basic questions may appear in multiple order ranges separated by deep/trick blocks — ordering follows logical topic progression rather than strict type-based grouping
 - For v1.0 sections, allocate advanced order ranges by type:
   - 16-20 for `deep` questions
   - 21-25 for `trick` questions
