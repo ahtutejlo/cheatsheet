@@ -48,11 +48,11 @@ Exceptions: Tag badges use py-0.5 (2px) for compact inline appearance, matching 
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 16px (text-base) | 400 (normal) | 1.5 (leading-relaxed) |
-| Label / Tag | 12px (text-xs) | 500 (font-medium) | 1.5 |
+| Label / Tag | 12px (text-xs) | 400 (normal) | 1.5 |
 | Heading | 24px (text-2xl) | 700 (font-bold) | 1.2 |
 | Search input | 16px (text-base) | 400 (normal) | 1.5 |
 
-Note: Search page heading uses text-2xl font-bold, matching existing section page headings. Pagefind UI inherits site font via `--pagefind-ui-font: inherit`.
+Two weights used: 400 (normal) for body, labels, tags, and search input; 700 (bold) for headings. The 12px size alone distinguishes tags from body text without needing an additional weight. Search page heading uses text-2xl font-bold, matching existing section page headings. Pagefind UI inherits site font via `--pagefind-ui-font: inherit`.
 
 ---
 
