@@ -76,10 +76,11 @@ Plans:
   1. User can type a search query and see matching questions and answers from any section in their selected language
   2. User can click a tag on a question to filter the section view to only questions with that tag
   3. Search and filter work correctly with all 195 questions across both UA and EN languages
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 06-01: TBD
+- [ ] 06-01-PLAN.md — Pagefind integration, search page, search icon in header, content indexing markup
+- [ ] 06-02-PLAN.md — TagBadge component, tag rendering on flashcards, client-side tag filtering with filter bar
 
 ## Progress
 
@@ -93,4 +94,4 @@ Phases execute in numeric order: 4 -> 5 -> 6
 | 3. Internationalization | v1.0 | 1/1 | Complete | 2026-03-21 |
 | 4. Infrastructure and UI | 2/2 | Complete   | 2026-03-21 | - |
 | 5. Content Generation | v1.1 | 0/6 | Not started | - |
-| 6. Search and Filter | v1.1 | 0/? | Not started | - |
+| 6. Search and Filter | v1.1 | 0/2 | Not started | - |
