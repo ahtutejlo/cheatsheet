@@ -14,10 +14,17 @@ const { locale } = Astro.params as { locale: Locale };
 const allQuestions = await getCollection('questions');
 const sectionSlugs = getAllSectionSlugs();
 
-const sectionData = sectionSlugs.map(slug => ({
-  slug,
-  count: allQuestions.filter(q => q.data.section === slug).length,
-}));
+const TYPE_ORDER = ['basic', 'deep', 'trick', 'practical'] as const;
+
+const sectionData = sectionSlugs.map(slug => {
+  const questions = allQuestions.filter(q => q.data.section === slug);
+  const typeCounts = TYPE_ORDER.map(type => ({
+    type,
+    count: questions.filter(q => (q.data.type || 'basic') === type).length,
+  })).filter(tc => tc.count > 0);
+
+  return { slug, count: questions.length, typeCounts };
+});
 ---
 <BaseLayout title={t(locale, 'site.title')} description={t(locale, 'site.description')} locale={locale}>
   <Header locale={locale} />
@@ -27,8 +34,8 @@ const sectionData = sectionSlugs.map(slug => ({
       <p class="mt-2 text-gray-600 dark:text-gray-400">{t(locale, 'home.subtitle')}</p>
     </div>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {sectionData.map(({ slug, count }) => (
-        <SectionCard slug={slug} count={count} locale={locale} />
+      {sectionData.map(({ slug, count, typeCounts }) => (
+        <SectionCard slug={slug} count={count} typeCounts={typeCounts} locale={locale} />
       ))}
     </div>
   </main>

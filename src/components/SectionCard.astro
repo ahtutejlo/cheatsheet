@@ -1,28 +1,88 @@
 ---
 import { t, localePath, type Locale } from '../i18n/utils';
 import { getSectionMeta } from '../i18n/sections';
+import { sectionColors } from '../lib/colors';
+
+interface TypeCount {
+  type: string;
+  count: number;
+}
 
 interface Props {
   slug: string;
   count: number;
+  typeCounts: TypeCount[];
   locale: Locale;
 }
 
-const { slug, count, locale } = Astro.props;
+const { slug, count, typeCounts, locale } = Astro.props;
 const meta = getSectionMeta(slug, locale);
+const colors = sectionColors[slug];
+
+const dotColorMap: Record<string, string> = {
+  basic: '#9ca3af',
+  deep: '#3b82f6',
+  trick: '#f59e0b',
+  practical: '#22c55e',
+};
 ---
 <a
   href={localePath(locale, slug)}
-  class="group block rounded-xl border border-gray-200 dark:border-gray-700 p-6 transition-all duration-200 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md hover:border-l-[3px] hover:border-l-blue-500 dark:hover:border-l-blue-400"
+  class="group block rounded-[14px] p-5 transition-all duration-200 hover:-translate-y-0.5"
+  style={`border: 2px solid ${colors.border}; box-shadow: 0 2px 8px rgba(${colors.shadowColor}, 0.08); --name-dark: ${colors.nameDark}; --border-dark: ${colors.borderDark};`}
 >
-  <div class="flex items-center gap-3 mb-2">
-    <span class="text-2xl" role="img" aria-hidden="true">{meta?.icon}</span>
-    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-      {meta?.name}
-    </h2>
+  <div class="flex items-center gap-3 mb-3">
+    <div
+      class="w-9 h-9 rounded-[10px] flex items-center justify-center"
+      style={`background: linear-gradient(135deg, ${colors.gradientFrom}, ${colors.gradientTo});`}
+    >
+      <span class="text-lg" role="img" aria-hidden="true">{meta?.icon}</span>
+    </div>
+    <div>
+      <h2 class="text-lg font-bold leading-tight" style={`color: ${colors.nameColor};`}>
+        {meta?.name}
+      </h2>
+    </div>
   </div>
-  <p class="text-gray-600 dark:text-gray-400 mb-3 text-sm">{meta?.description}</p>
-  <span class="text-sm font-medium text-blue-600 dark:text-blue-400">
-    {count} {t(locale, 'section.questions')}
-  </span>
+  <p class="text-sm mb-3 opacity-70" style={`color: ${colors.descColor};`}>{meta?.description}</p>
+  <div class="flex items-center gap-1.5 mb-2">
+    <span
+      class="text-[9px] font-bold text-white px-1.5 py-0.5 rounded-full"
+      style={`background: ${colors.pillBg};`}
+    >
+      {count}
+    </span>
+    <span class="text-[10px] text-slate-400">{t(locale, 'section.questions')}</span>
+  </div>
+  {typeCounts.length > 1 && (
+    <>
+      <div class="flex h-1 rounded-full overflow-hidden gap-px">
+        {typeCounts.map(tc => (
+          <div style={`flex: ${tc.count}; background: ${dotColorMap[tc.type]};`}></div>
+        ))}
+      </div>
+      <div class="flex gap-2 mt-1.5">
+        {typeCounts.map(tc => (
+          <span class="text-[9px] flex items-center gap-1" style={`color: ${dotColorMap[tc.type]};`}>
+            <span class="w-1.5 h-1.5 rounded-full inline-block" style={`background: ${dotColorMap[tc.type]};`}></span>
+            {tc.count}
+          </span>
+        ))}
+      </div>
+    </>
+  )}
 </a>
+
+<style>
+  /* Dark mode overrides via CSS custom properties set on the <a> style attribute */
+  :global(html.dark) a {
+    background: rgba(255,255,255,0.03);
+    border-color: var(--border-dark) !important;
+  }
+  :global(html.dark) a h2 {
+    color: var(--name-dark) !important;
+  }
+  :global(html.dark) a p {
+    color: #94a3b8 !important;
+  }
+</style>
