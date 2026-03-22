@@ -21,9 +21,9 @@ Requirements for milestone v1.1 Advanced Questions. Each maps to roadmap phases.
 
 ### Content — Automation QA
 
-- [ ] **CONT-01**: 5 глибоких технічних питань для Automation QA (білінгвальні UA/EN)
-- [ ] **CONT-02**: 5 питань-пасток для Automation QA (білінгвальні UA/EN)
-- [ ] **CONT-03**: 5 практичних задач для Automation QA (білінгвальні UA/EN)
+- [x] **CONT-01**: 5 глибоких технічних питань для Automation QA (білінгвальні UA/EN)
+- [x] **CONT-02**: 5 питань-пасток для Automation QA (білінгвальні UA/EN)
+- [x] **CONT-03**: 5 практичних задач для Automation QA (білінгвальні UA/EN)
 
 ### Content — Java
 
@@ -88,9 +88,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-01 | Phase 4 | Complete |
 | UI-02 | Phase 4 | Complete |
 | UI-03 | Phase 4 | Complete |
-| CONT-01 | Phase 5 | Pending |
-| CONT-02 | Phase 5 | Pending |
-| CONT-03 | Phase 5 | Pending |
+| CONT-01 | Phase 5 | Complete |
+| CONT-02 | Phase 5 | Complete |
+| CONT-03 | Phase 5 | Complete |
 | CONT-04 | Phase 5 | Pending |
 | CONT-05 | Phase 5 | Pending |
 | CONT-06 | Phase 5 | Pending |
