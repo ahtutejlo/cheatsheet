@@ -46,6 +46,7 @@ const grouped = TYPE_ORDER
           question: (q.data as any)[questionKey] as string,
           answer: (q.data as any)[answerKey] as string,
           type: (q.data.type || 'basic') as 'basic' | 'deep' | 'trick' | 'practical',
+          tags: q.data.tags || [],
         };
       }),
   }))
@@ -111,8 +112,17 @@ const textColors: Record<string, string> = {
         </div>
       )}
     </div>
+    <div id="filter-bar" class="hidden mb-4 flex items-center gap-2 text-sm" data-pagefind-ignore>
+      <span class="text-gray-600 dark:text-gray-400">
+        {t(locale, 'filter.activeLabel')}:
+        <span id="filter-tag-name" class="font-medium text-gray-900 dark:text-gray-100"></span>
+      </span>
+      <button id="clear-filter" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+        {t(locale, 'filter.showAll')}
+      </button>
+    </div>
     {grouped.map((group, index) => (
-      <div>
+      <div data-type-group={group.type}>
         {grouped.length > 1 && (
           <div data-pagefind-ignore class:list={['flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700', index === 0 ? 'pt-0' : 'pt-8']}>
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -155,5 +165,80 @@ const textColors: Record<string, string> = {
 
     // Handle hash changes (clicking anchor links on the same page)
     window.addEventListener('hashchange', handleAnchorLink);
+  </script>
+
+  <script>
+    function initTagFilter() {
+      const filterBar = document.getElementById('filter-bar');
+      const filterTagName = document.getElementById('filter-tag-name');
+      const clearBtn = document.getElementById('clear-filter');
+      let activeTag: string | null = null;
+
+      function applyFilter(tag: string | null) {
+        activeTag = tag;
+
+        // Update filter bar visibility
+        if (filterBar) {
+          filterBar.classList.toggle('hidden', !tag);
+          // When visible, ensure flex display
+          if (tag) filterBar.classList.add('flex');
+          else filterBar.classList.remove('flex');
+        }
+        if (filterTagName && tag) {
+          filterTagName.textContent = tag;
+        }
+
+        // Update tag badge active states
+        document.querySelectorAll('.tag-filter').forEach(btn => {
+          const btnTag = (btn as HTMLElement).dataset.tag;
+          const isActive = btnTag === tag;
+          btn.classList.toggle('bg-blue-500', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('dark:bg-blue-600', isActive);
+          btn.classList.toggle('dark:text-white', isActive);
+          // Remove default classes when active
+          btn.classList.toggle('bg-gray-100', !isActive);
+          btn.classList.toggle('text-gray-600', !isActive);
+          btn.classList.toggle('dark:bg-gray-700', !isActive);
+          btn.classList.toggle('dark:text-gray-300', !isActive);
+        });
+
+        // Show/hide flashcards
+        document.querySelectorAll('.flashcard').forEach(card => {
+          if (!tag) {
+            (card as HTMLElement).style.display = '';
+            return;
+          }
+          const cardTags = (card as HTMLElement).dataset.tags?.split(',') || [];
+          (card as HTMLElement).style.display = cardTags.includes(tag) ? '' : 'none';
+        });
+
+        // Show/hide empty type groups
+        document.querySelectorAll('[data-type-group]').forEach(group => {
+          if (!tag) {
+            (group as HTMLElement).style.display = '';
+            return;
+          }
+          const visibleCards = group.querySelectorAll('.flashcard:not([style*="display: none"])');
+          (group as HTMLElement).style.display = visibleCards.length ? '' : 'none';
+        });
+      }
+
+      // Tag badge click handler (event delegation on main)
+      document.querySelector('main')?.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest('.tag-filter');
+        if (!btn) return;
+        e.preventDefault();
+        // Prevent details from toggling when clicking tag inside summary
+        e.stopPropagation();
+        const tag = (btn as HTMLElement).dataset.tag || null;
+        applyFilter(tag === activeTag ? null : tag);
+      });
+
+      // Clear filter button
+      clearBtn?.addEventListener('click', () => applyFilter(null));
+    }
+
+    initTagFilter();
   </script>
 </BaseLayout>
