@@ -24,12 +24,12 @@ html.dark .shiki span {
 /* Pagefind UI theme integration */
 :root {
   --pagefind-ui-primary: #3b82f6;
-  --pagefind-ui-text: #111827;
+  --pagefind-ui-text: #0f172a;
   --pagefind-ui-background: #ffffff;
-  --pagefind-ui-border: #e5e7eb;
-  --pagefind-ui-tag: #f3f4f6;
-  --pagefind-ui-border-width: 1px;
-  --pagefind-ui-border-radius: 8px;
+  --pagefind-ui-border: #e2e8f0;
+  --pagefind-ui-tag: #f1f5f9;
+  --pagefind-ui-border-width: 2px;
+  --pagefind-ui-border-radius: 12px;
   --pagefind-ui-scale: 1;
   --pagefind-ui-font: inherit;
 }
