@@ -82,8 +82,8 @@ const textColors: Record<string, string> = {
   locale={locale}
 >
   <Header locale={locale} currentPath={section} />
-  <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
-    <div class="mb-8">
+  <main data-pagefind-body class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <div class="mb-8" data-pagefind-ignore>
       <a href={localePath(locale)}
          class="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4 transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@ const textColors: Record<string, string> = {
     {grouped.map((group, index) => (
       <div>
         {grouped.length > 1 && (
-          <div class:list={['flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700', index === 0 ? 'pt-0' : 'pt-8']}>
+          <div data-pagefind-ignore class:list={['flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700', index === 0 ? 'pt-0' : 'pt-8']}>
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {t(locale, `group.${group.type}` as any)}
             </h2>
