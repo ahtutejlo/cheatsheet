@@ -1,18 +1,13 @@
 ---
-import { getTagColor } from '../lib/colors';
-
 interface Props {
   tag: string;
 }
 const { tag } = Astro.props;
-const color = getTagColor(tag);
 ---
 <button
-  class:list={[
-    'tag-filter inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-    'border transition-all cursor-pointer hover:scale-105',
-    color.bg, color.text, color.border,
-  ]}
+  class="tag-filter inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+         border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/30
+         text-blue-700 dark:text-blue-300 transition-all cursor-pointer hover:scale-105"
   data-tag={tag}
 >
   #{tag}
