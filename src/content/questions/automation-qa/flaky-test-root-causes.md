@@ -74,7 +74,7 @@ en_answer: |
 
   Understanding the root causes of flaky tests allows you to systematically eliminate them rather than just adding retries that mask the problem.
 section: "automation-qa"
-order: 16
+order: 11
 tags:
   - flaky-tests
   - test-stability

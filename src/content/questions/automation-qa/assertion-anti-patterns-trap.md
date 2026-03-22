@@ -90,7 +90,7 @@ en_answer: |
 
   The mistake is common due to a false analogy with unit tests where multiple assertions verify a single object. In E2E tests, each assertion may depend on different subsystems.
 section: "automation-qa"
-order: 24
+order: 13
 tags:
   - assertions
   - test-design

@@ -144,7 +144,7 @@ en_answer: |
   }
   ```
 section: "automation-qa"
-order: 29
+order: 17
 tags:
   - dynamic-content
   - scrolling

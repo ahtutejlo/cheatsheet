@@ -94,7 +94,7 @@ en_answer: |
   }
   ```
 section: "automation-qa"
-order: 12
+order: 7
 tags:
   - data-driven
   - parameterized

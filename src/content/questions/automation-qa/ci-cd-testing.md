@@ -68,7 +68,7 @@ en_answer: |
 
   **Recommendations:** run fast tests first, use parallelization, save reports and screenshots on test failures.
 section: "automation-qa"
-order: 8
+order: 5
 tags:
   - ci-cd
   - devops

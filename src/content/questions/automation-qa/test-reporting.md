@@ -72,7 +72,7 @@ en_answer: |
 
   **Recommendations:** integrate reports into CI/CD pipeline, keep run history, set up notifications on test failures (Slack, email).
 section: "automation-qa"
-order: 14
+order: 9
 tags:
   - reporting
   - allure
