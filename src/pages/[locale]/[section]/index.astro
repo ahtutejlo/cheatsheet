@@ -5,7 +5,7 @@ import Header from '../../../components/Header.astro';
 import FlashcardList from '../../../components/FlashcardList.astro';
 import { t, localePath, type Locale, locales } from '../../../i18n/utils';
 import { getSectionMeta, getAllSectionSlugs } from '../../../i18n/sections';
-import { sectionColors } from '../../../lib/colors';
+import { getSectionColor, typeDotClasses, typeTextClasses } from '../../../lib/colors';
 
 export async function getStaticPaths() {
   const sectionSlugs = getAllSectionSlugs();
@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 
 const { locale, section } = Astro.params as { locale: Locale; section: string };
 const meta = getSectionMeta(section, locale);
-const sectionColor = sectionColors[section];
+const sectionColor = getSectionColor(section);
 
 if (!meta) {
   return Astro.redirect(localePath(locale));
@@ -65,19 +65,6 @@ const typeCounts = TYPE_ORDER
   }))
   .filter(tc => tc.count > 0);
 
-// Color maps for type count dots
-const dotColors: Record<string, string> = {
-  basic: 'bg-gray-400',
-  deep: 'bg-blue-500',
-  trick: 'bg-amber-500',
-  practical: 'bg-green-500',
-};
-const textColors: Record<string, string> = {
-  basic: 'text-gray-600 dark:text-gray-400',
-  deep: 'text-blue-700 dark:text-blue-300',
-  trick: 'text-amber-700 dark:text-amber-300',
-  practical: 'text-green-700 dark:text-green-300',
-};
 ---
 <BaseLayout
   title={`${meta.name} - ${t(locale, 'site.title')}`}
@@ -111,8 +98,8 @@ const textColors: Record<string, string> = {
       {typeCounts.length > 1 && (
         <div class="flex flex-wrap items-center gap-3 mt-2 ml-12">
           {typeCounts.map(tc => (
-              <span class={`inline-flex items-center gap-1 text-xs font-normal ${textColors[tc.type]}`}>
-                <span class={`w-2 h-2 rounded-full ${dotColors[tc.type]}`}></span>
+              <span class={`inline-flex items-center gap-1 text-xs font-normal ${typeTextClasses[tc.type]}`}>
+                <span class={`w-2 h-2 rounded-full ${typeDotClasses[tc.type]}`}></span>
                 {tc.count} {t(locale, `group.${tc.type}` as any)}
               </span>
           ))}

@@ -1,7 +1,7 @@
 ---
 import { t, localePath, type Locale } from '../i18n/utils';
 import { getSectionMeta } from '../i18n/sections';
-import { sectionColors } from '../lib/colors';
+import { getSectionColor, typeDotColors } from '../lib/colors';
 
 interface TypeCount {
   type: string;
@@ -17,14 +17,7 @@ interface Props {
 
 const { slug, count, typeCounts, locale } = Astro.props;
 const meta = getSectionMeta(slug, locale);
-const colors = sectionColors[slug];
-
-const dotColorMap: Record<string, string> = {
-  basic: '#9ca3af',
-  deep: '#3b82f6',
-  trick: '#f59e0b',
-  practical: '#22c55e',
-};
+const colors = getSectionColor(slug);
 ---
 <a
   href={localePath(locale, slug)}
@@ -54,13 +47,13 @@ const dotColorMap: Record<string, string> = {
     <>
       <div class="flex h-1 rounded-full overflow-hidden gap-px">
         {typeCounts.map(tc => (
-          <div style={`flex: ${tc.count}; background: ${dotColorMap[tc.type]};`}></div>
+          <div style={`flex: ${tc.count}; background: ${typeDotColors[tc.type]};`}></div>
         ))}
       </div>
       <div class="flex gap-2 mt-1.5">
         {typeCounts.map(tc => (
-          <span class="text-[9px] flex items-center gap-1" style={`color: ${dotColorMap[tc.type]};`}>
-            <span class="w-1.5 h-1.5 rounded-full inline-block" style={`background: ${dotColorMap[tc.type]};`}></span>
+          <span class="text-[9px] flex items-center gap-1" style={`color: ${typeDotColors[tc.type]};`}>
+            <span class="w-1.5 h-1.5 rounded-full inline-block" style={`background: ${typeDotColors[tc.type]};`}></span>
             {tc.count}
           </span>
         ))}
