@@ -28,22 +28,53 @@ export async function renderMarkdown(content: string): Promise<string> {
 
   const renderer = new marked.Renderer();
 
+  // --- Callout patterns ---
+  const calloutPatterns: { pattern: RegExp; type: string; icon: string; label: string }[] = [
+    { pattern: /^<p><strong>Trap:<\/strong>/, type: 'trap', icon: '🪤', label: 'Trap' },
+    { pattern: /^<p><strong>Пастка:<\/strong>/, type: 'trap', icon: '🪤', label: 'Пастка' },
+    { pattern: /^<p><strong>Note:<\/strong>/, type: 'note', icon: 'ℹ️', label: 'Note' },
+    { pattern: /^<p><strong>Примітка:<\/strong>/, type: 'note', icon: 'ℹ️', label: 'Примітка' },
+    { pattern: /^<p><strong>Key:<\/strong>/, type: 'key', icon: '💡', label: 'Key' },
+    { pattern: /^<p><strong>Ключове:<\/strong>/, type: 'key', icon: '💡', label: 'Ключове' },
+  ];
+
+  renderer.blockquote = function ({ tokens }: Tokens.Blockquote): string {
+    const html = this.parser.parse(tokens);
+    for (const callout of calloutPatterns) {
+      if (callout.pattern.test(html)) {
+        const content = html.replace(callout.pattern, '<p>');
+        return `<div class="callout callout-${callout.type}">
+        <span class="callout-icon">${callout.icon}</span>
+        <div>
+          <div class="callout-label">${callout.label}</div>
+          ${content}
+        </div>
+      </div>`;
+      }
+    }
+    return `<blockquote>${html}</blockquote>`;
+  };
+
   renderer.code = function ({ text, lang }: Tokens.Code): string {
     const language = lang || 'text';
+    let codeHtml: string;
     try {
-      // Use the same dual-theme approach as Astro's built-in Shiki config
-      return hl.codeToHtml(text, {
+      codeHtml = hl.codeToHtml(text, {
         lang: language,
-        themes: {
-          light: 'github-light',
-          dark: 'github-dark',
-        },
+        themes: { light: 'github-light', dark: 'github-dark' },
       });
     } catch {
-      // Fallback for unsupported languages: render as plain preformatted text
       const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      return `<pre class="shiki"><code>${escaped}</code></pre>`;
+      codeHtml = `<pre class="shiki"><code>${escaped}</code></pre>`;
     }
+
+    if (lang) {
+      return `<div class="code-block-wrapper">
+      <div class="code-block-header"><span class="code-block-lang">📄 ${language}</span></div>
+      ${codeHtml}
+    </div>`;
+    }
+    return codeHtml;
   };
 
   marked.setOptions({
