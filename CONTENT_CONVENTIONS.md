@@ -92,9 +92,9 @@ Question files live under `src/content/questions/{section}/{slug}.md`.
 
 The `order` field controls display sequence within a section.
 
-- **Existing v1.0 questions** use orders 1-15 per section
-- **New advanced questions** (Phase 5 and beyond) should start at order 16 to avoid collisions
-- Within a section, allocate order ranges by type:
+- **Existing v1.0 sections** (Java, Docker, Kubernetes, Blockchain, SQL) use orders 1-15 for basic questions, 16+ for advanced
+- **New sections** (Python, Playwright, Performance Testing) start ordering at 1 since they have no legacy content
+- For v1.0 sections, allocate advanced order ranges by type:
   - 16-20 for `deep` questions
   - 21-25 for `trick` questions
   - 26-30 for `practical` questions
@@ -113,8 +113,9 @@ Follow existing section-specific conventions:
 | SQL | `joins`, `indexes`, `transactions`, `optimization` |
 | Blockchain | `consensus`, `smart-contracts`, `solidity`, `evm` |
 | QA | `testing-strategies`, `automation`, `test-design` |
-
-Tags enable future search and filtering functionality (Phase 6).
+| Python | `core-language`, `oop`, `pytest`, `fixtures`, `async`, `api-testing`, `typing` |
+| Playwright | `selectors`, `auto-waiting`, `network`, `ci-cd`, `visual-regression`, `pom` |
+| Performance Testing | `load-testing`, `metrics`, `locust`, `bottleneck-analysis`, `ci-cd`, `monitoring` |
 
 ## Bilingual Content Rules
 

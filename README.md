@@ -1,12 +1,12 @@
 # Interview Cheatsheet
 
-A static flashcard site for technical interview preparation. Browse 105 bilingual questions across 7 topics, click to reveal answers with syntax-highlighted code examples.
+A static flashcard site for technical interview preparation. Browse bilingual questions across multiple topics, click to reveal answers with syntax-highlighted code examples.
 
 **Live:** [ahtutejlo.github.io/cheatsheet](https://ahtutejlo.github.io/cheatsheet/)
 
 ## Features
 
-- **7 sections** — QA, Automation QA, Java, Docker, Kubernetes, Blockchain, SQL (15 questions each)
+- **10 sections** — QA, Automation QA, Python, Playwright, Performance Testing, Java, Docker, Kubernetes, Blockchain, SQL
 - **Click-to-reveal flashcards** — smooth animation, anchor links for sharing individual questions
 - **Bilingual** — Ukrainian and English with a one-click language toggle
 - **Dark/light mode** — system preference detection, manual toggle, no flash on load
@@ -54,7 +54,7 @@ Push to `main` and the site rebuilds automatically.
 src/
 ├── components/     # Header, SectionCard, Flashcard, FlashcardList
 ├── content/
-│   └── questions/  # 105 markdown files across 7 sections
+│   └── questions/  # Markdown files across 10 sections
 ├── i18n/           # UI translations, section metadata, utilities
 ├── layouts/        # BaseLayout
 ├── lib/            # Markdown renderer with Shiki
