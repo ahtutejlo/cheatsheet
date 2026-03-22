@@ -16,12 +16,11 @@ interface Props {
 const { slug, question, answer, type = 'basic', locale, tags = [] } = Astro.props;
 const answerHtml = await renderMarkdown(answer);
 const colors = typeColors[type];
-const borderWidth = type === 'basic' ? 'border' : 'border-2';
 ---
 <details
   class:list={[
     'flashcard group overflow-hidden rounded-xl border-l-4',
-    borderWidth, colors.borderOuter, colors.borderLeft, colors.shadow,
+    'border border-gray-200 dark:border-gray-700', colors.borderLeft, 'shadow-sm',
   ]}
   data-tags={tags.join(',')}
 >
@@ -61,7 +60,7 @@ const borderWidth = type === 'basic' ? 'border' : 'border-2';
     'prose prose-sm sm:prose-base max-w-none dark:prose-invert',
     'prose-pre:rounded-lg prose-pre:text-sm',
     'prose-code:before:content-none prose-code:after:content-none',
-    type === 'basic' ? 'border-gray-200 dark:border-gray-700' : colors.borderOuter,
+    'border-gray-200 dark:border-gray-700',
   ]}>
     <Fragment set:html={answerHtml} />
   </div>
