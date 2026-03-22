@@ -2,26 +2,36 @@
 import { renderMarkdown } from '../lib/markdown';
 import TypeBadge from './TypeBadge.astro';
 import TagBadge from './TagBadge.astro';
+import { typeColors, type QuestionType } from '../lib/colors';
 
 interface Props {
   slug: string;
   question: string;
-  answer: string;  // Markdown string
-  type?: 'basic' | 'deep' | 'trick' | 'practical';
+  answer: string;
+  type?: QuestionType;
   locale: 'ua' | 'en';
   tags?: string[];
 }
 
 const { slug, question, answer, type = 'basic', locale, tags = [] } = Astro.props;
 const answerHtml = await renderMarkdown(answer);
+const colors = typeColors[type];
+const borderWidth = type === 'basic' ? 'border' : 'border-2';
 ---
-<details class="flashcard group border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden" data-tags={tags.join(',')}>
+<details
+  class:list={[
+    'flashcard group overflow-hidden rounded-xl border-l-4',
+    borderWidth, colors.borderOuter, colors.borderLeft, colors.shadow,
+  ]}
+  data-tags={tags.join(',')}
+>
   <summary class="cursor-pointer select-none p-4 sm:p-5 font-medium text-gray-900 dark:text-gray-100
-                   hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors
+                   hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors
                    min-h-[44px] flex items-center gap-3 list-none">
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-3">
-        <h3 id={slug} class="flex-1 text-base leading-relaxed font-normal">{question}</h3>
+        <span class="text-base shrink-0" role="img" aria-hidden="true">{colors.icon}</span>
+        <h3 id={slug} class="flex-1 text-base leading-relaxed font-medium">{question}</h3>
         {type !== 'basic' && <TypeBadge type={type} locale={locale} />}
         <a href={`#${slug}`}
            class="text-gray-300 dark:text-gray-600 hover:text-blue-500 dark:hover:text-blue-400 transition-colors shrink-0"
@@ -32,7 +42,7 @@ const answerHtml = await renderMarkdown(answer);
                   d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-1.102-4.242a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.1-1.1" />
           </svg>
         </a>
-        <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform duration-200 group-open:rotate-180 shrink-0"
+        <svg class:list={['w-5 h-5 transition-transform duration-200 group-open:rotate-180 shrink-0', colors.chevron]}
              viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd"
                 d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
@@ -40,28 +50,27 @@ const answerHtml = await renderMarkdown(answer);
         </svg>
       </div>
       {tags.length > 0 && (
-        <div class="flex flex-wrap gap-1 mt-2">
+        <div class="flex flex-wrap gap-1.5 mt-2 ml-8">
           {tags.map(tag => <TagBadge tag={tag} />)}
         </div>
       )}
     </div>
   </summary>
-  <div class="flashcard-answer border-t border-gray-200 dark:border-gray-700 p-4 sm:p-5
-              prose prose-sm sm:prose-base max-w-none dark:prose-invert
-              prose-pre:bg-gray-100 prose-pre:border prose-pre:border-gray-200
-              dark:prose-pre:bg-gray-800 dark:prose-pre:border-gray-700
-              prose-pre:rounded-lg prose-pre:text-sm
-              prose-code:before:content-none prose-code:after:content-none">
+  <div class:list={[
+    'flashcard-answer border-t p-4 sm:p-5',
+    'prose prose-sm sm:prose-base max-w-none dark:prose-invert',
+    'prose-pre:rounded-lg prose-pre:text-sm',
+    'prose-code:before:content-none prose-code:after:content-none',
+    type === 'basic' ? 'border-gray-200 dark:border-gray-700' : colors.borderOuter,
+  ]}>
     <Fragment set:html={answerHtml} />
   </div>
 </details>
 
 <style>
-  /* Hide default marker/arrow */
   summary { list-style: none; }
   summary::-webkit-details-marker { display: none; }
 
-  /* Smooth reveal animation */
   details .flashcard-answer {
     animation: flashcard-reveal 200ms ease-out;
   }
@@ -70,19 +79,22 @@ const answerHtml = await renderMarkdown(answer);
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Highlight animation for anchor link targets */
   details.highlight {
     box-shadow: 0 0 0 2px #3b82f6;
     transition: box-shadow 0.3s ease;
   }
 
-  /* Shiki code blocks from renderMarkdown get their own background;
-     override prose-pre background so Shiki themes show through */
   .flashcard-answer :global(pre.shiki) {
     background-color: var(--shiki-light-bg, #fff) !important;
   }
-
   html.dark .flashcard-answer :global(pre.shiki) {
     background-color: var(--shiki-dark-bg, #1e1e1e) !important;
+  }
+
+  /* Remove prose default code block styles when inside wrapper */
+  .flashcard-answer :global(.code-block-wrapper pre) {
+    background: transparent !important;
+    border: none !important;
+    padding: 12px !important;
   }
 </style>
