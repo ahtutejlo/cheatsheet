@@ -5,6 +5,7 @@ import Header from '../../../components/Header.astro';
 import FlashcardList from '../../../components/FlashcardList.astro';
 import { t, localePath, type Locale, locales } from '../../../i18n/utils';
 import { getSectionMeta, getAllSectionSlugs } from '../../../i18n/sections';
+import { sectionColors } from '../../../lib/colors';
 
 export async function getStaticPaths() {
   const sectionSlugs = getAllSectionSlugs();
@@ -18,6 +19,7 @@ export async function getStaticPaths() {
 
 const { locale, section } = Astro.params as { locale: Locale; section: string };
 const meta = getSectionMeta(section, locale);
+const sectionColor = sectionColors[section];
 
 if (!meta) {
   return Astro.redirect(localePath(locale));
@@ -93,9 +95,14 @@ const textColors: Record<string, string> = {
         {t(locale, 'section.back')}
       </a>
       <div class="flex items-center gap-3">
-        <span class="text-3xl" role="img" aria-hidden="true">{meta.icon}</span>
+        <div
+          class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
+          style={`background: linear-gradient(135deg, ${sectionColor.gradientFrom}, ${sectionColor.gradientTo});`}
+        >
+          <span class="text-xl" role="img" aria-hidden="true">{meta.icon}</span>
+        </div>
         <div>
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">{meta.name}</h1>
+          <h1 class="text-2xl font-extrabold text-gray-900 dark:text-gray-100 sm:text-3xl">{meta.name}</h1>
           <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">
             {totalCount} {t(locale, 'section.questions')}
           </p>
