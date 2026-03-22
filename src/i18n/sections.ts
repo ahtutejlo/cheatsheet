@@ -23,6 +23,18 @@ export const sections: Record<string, Record<Locale, SectionMeta>> = {
     ua: { name: 'Automation QA', description: 'Автоматизоване тестування', icon: '🤖' },
     en: { name: 'Automation QA', description: 'Test automation fundamentals', icon: '🤖' },
   },
+  python: {
+    ua: { name: 'Python', description: 'Мова програмування Python та екосистема тестування', icon: '🐍' },
+    en: { name: 'Python', description: 'Python programming language and testing ecosystem', icon: '🐍' },
+  },
+  playwright: {
+    ua: { name: 'Playwright', description: 'UI автоматизація з Playwright', icon: '🎭' },
+    en: { name: 'Playwright', description: 'UI automation with Playwright', icon: '🎭' },
+  },
+  'performance-testing': {
+    ua: { name: 'Performance Testing', description: 'Тестування продуктивності', icon: '⚡' },
+    en: { name: 'Performance Testing', description: 'Performance testing', icon: '⚡' },
+  },
   kubernetes: {
     ua: { name: 'Kubernetes', description: 'Оркестрація контейнерів', icon: '☸️' },
     en: { name: 'Kubernetes', description: 'Container orchestration', icon: '☸️' },
