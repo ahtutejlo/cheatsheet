@@ -31,7 +31,7 @@ Declared values (must be multiples of 4):
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| xs | 4px | Icon gaps (gap-1), tag badge vertical padding (py-0.5) |
+| xs | 4px | Icon gaps (gap-1), tag badge vertical padding (py-1) |
 | sm | 8px | Tag badge horizontal padding (px-2), compact element spacing (gap-2) |
 | md | 16px | Default element spacing (p-4), search input padding |
 | lg | 24px | Section padding (mb-6), search results spacing |
@@ -39,7 +39,7 @@ Declared values (must be multiples of 4):
 | 2xl | 48px | Page-level vertical padding (sm:py-12) |
 | 3xl | 64px | Not used this phase |
 
-Exceptions: Tag badges use py-0.5 (2px) for compact inline appearance, matching existing TypeBadge pattern.
+Exceptions: None.
 
 ---
 
