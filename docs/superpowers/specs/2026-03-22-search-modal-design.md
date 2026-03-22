@@ -2,7 +2,7 @@
 
 ## Overview
 
-Replace the dedicated search page (`/[locale]/search`) with a modal overlay triggered from the Header search icon. Uses Pagefind JS API directly (not the default UI component) for full control over result rendering.
+Replace the current search link in the Header (which points to a non-existent `/[locale]/search` page) with a modal overlay. Uses Pagefind JS API directly (not the default UI component) for full control over result rendering.
 
 ## User Flow
 
@@ -30,10 +30,11 @@ Renders the modal markup (hidden by default) and contains all search logic in a 
 ```
 
 **Script responsibilities:**
-- Lazy-load Pagefind on first modal open: `await import('/pagefind/pagefind.js')`
+- Lazy-load Pagefind on first modal open: `await import(import.meta.env.BASE_URL + 'pagefind/pagefind.js')` (base-path-aware)
 - Debounced search (300ms) via `pagefind.search(query)` → `result.data()` for each hit
-- Render results as `<a>` elements linking to section page with `#question-slug` anchor
-- Extract section name from result URL path segment
+- Render results as `<a>` elements linking to section page with `#{slug}` anchor (matches existing Flashcard `id={slug}`)
+- Section name and emoji: embedded as `data-pagefind-meta` attributes on section pages, available via `result.meta` at search time (requires adding `data-pagefind-meta="section_name:..., section_icon:..."` to section page `<main>`)
+- All result URLs constructed via base-path-aware logic (using `import.meta.env.BASE_URL`)
 - Close modal on Escape, backdrop click, or result click
 
 **States:**
@@ -54,24 +55,27 @@ Renders the modal markup (hidden by default) and contains all search logic in a 
 
 - Include `<SearchModal />` component (renders once per page)
 
-### Deleted: `src/pages/[locale]/search.astro`
+### Modified: `src/pages/[locale]/[section]/index.astro`
 
-- No longer needed — search is now a modal accessible from any page
+- Add `data-pagefind-meta="section_name:{name}, section_icon:{icon}"` to `<main>` element so Pagefind indexes section metadata for display in search results
+
+### Note: No search page exists
+
+The Header currently links to `/[locale]/search` but this page was never committed. The link will be replaced by the search button — no file deletion needed.
 
 ### No changes needed:
 
 - `src/i18n/ui.ts` — existing keys (`search.label`, `search.placeholder`, `search.noResults`) are reused
 - `src/styles/global.css` — Pagefind CSS variables stay (used by Pagefind internally), but the default Pagefind UI CSS is no longer loaded
 - `astro.config.mjs` — `pagefind()` integration stays for index generation
-- Section pages — `data-pagefind-body` and `data-pagefind-ignore` attributes remain unchanged
 
 ## Result Item Format
 
 Each search result displays:
 - **Line 1:** Question title (bold, text-sm) — extracted from Pagefind result metadata
-- **Line 2:** Section emoji + section name (text-xs, muted color) — derived from URL path
+- **Line 2:** Section emoji + section name (text-xs, muted color) — from Pagefind `result.meta.section_icon` and `result.meta.section_name`
 
-Link target: `/{locale}/{section}/#q-{question-slug}`
+Link target: `{BASE_URL}{locale}/{section}/#{slug}` (matches existing Flashcard component `id={slug}`)
 
 ## Styling
 
@@ -99,3 +103,4 @@ The locale is passed to SearchModal as a prop to construct correct result URLs.
 - **Many results:** Scrollable container with max-height; Pagefind returns ranked results, we show all
 - **Body scroll lock:** When modal is open, `document.body.style.overflow = 'hidden'` prevents background scroll
 - **Focus trap:** Not strictly needed for a search modal — Escape closes it
+- **Keyboard navigation:** Out of scope for this iteration — results are navigable by mouse/touch only
