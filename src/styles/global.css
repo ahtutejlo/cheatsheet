@@ -108,3 +108,7 @@ html.dark .callout-key p { color: #bbf7d0; }
 html.dark .code-block-wrapper { border-color: #334155; }
 html.dark .code-block-header { background: #1e293b; border-color: #334155; }
 html.dark .code-block-lang { color: #94a3b8; }
+
+/* --- Collapsible type groups --- */
+details[data-type-group] > summary { list-style: none; }
+details[data-type-group] > summary::-webkit-details-marker { display: none; }

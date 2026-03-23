@@ -5,7 +5,7 @@ import Header from '../../../components/Header.astro';
 import FlashcardList from '../../../components/FlashcardList.astro';
 import { t, localePath, type Locale, locales } from '../../../i18n/utils';
 import { getSectionMeta, getAllSectionSlugs } from '../../../i18n/sections';
-import { getSectionColor, typeDotClasses, typeTextClasses } from '../../../lib/colors';
+import { getSectionColor, typeDotClasses, typeTextClasses, typeColors } from '../../../lib/colors';
 
 export async function getStaticPaths() {
   const sectionSlugs = getAllSectionSlugs();
@@ -119,19 +119,29 @@ const typeCounts = TYPE_ORDER
       </button>
     </div>
     {grouped.map((group, index) => (
-      <div data-type-group={group.type}>
-        {grouped.length > 1 && (
-          <div data-pagefind-ignore class:list={['flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700', index === 0 ? 'pt-0' : 'pt-8']}>
+      grouped.length > 1 ? (
+        <details open data-type-group={group.type} class:list={['group/typegroup', index === 0 ? '' : 'pt-8']}>
+          <summary data-pagefind-ignore class="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 cursor-pointer select-none list-none">
+            <svg class:list={['w-5 h-5 transition-transform duration-200 group-open/typegroup:rotate-180 shrink-0', typeColors[group.type].chevron]}
+                 viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd" />
+            </svg>
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {t(locale, `group.${group.type}` as any)}
             </h2>
             <span class="text-sm text-gray-500 dark:text-gray-400">({group.questions.length})</span>
+          </summary>
+          <div class="mt-4">
+            <FlashcardList questions={group.questions} locale={locale} />
           </div>
-        )}
-        <div class={grouped.length > 1 ? 'mt-4' : ''}>
+        </details>
+      ) : (
+        <div data-type-group={group.type}>
           <FlashcardList questions={group.questions} locale={locale} />
         </div>
-      </div>
+      )
     ))}
   </main>
 
