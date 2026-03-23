@@ -177,14 +177,15 @@ const typeCounts = TYPE_ORDER
       const target = document.getElementById(hash.slice(1));
       if (!target) return;
 
-      // Open the parent details element if target is inside a flashcard
-      const details = target.closest('details') || (target.tagName === 'DETAILS' ? target : null);
-      if (details) {
-        (details as HTMLDetailsElement).open = true;
+      // Open ALL ancestor details elements (flashcard + type group)
+      let el: HTMLElement | null = target.closest('details') || (target.tagName === 'DETAILS' ? target : null);
+      while (el) {
+        (el as HTMLDetailsElement).open = true;
+        el = el.parentElement?.closest('details') as HTMLElement | null ?? null;
       }
 
-      // Scroll to target with a short delay to allow details to open
-      const scrollTarget = details || target;
+      // Scroll to the innermost details (the flashcard)
+      const scrollTarget = target.closest('details') || target;
       setTimeout(() => {
         scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
         scrollTarget.classList.add('highlight');
