@@ -70,6 +70,10 @@ const colors = typeColors[type];
   summary { list-style: none; }
   summary::-webkit-details-marker { display: none; }
 
+  details:not([open]) .flashcard-answer {
+    content-visibility: hidden;
+    contain-intrinsic-size: 0 200px;
+  }
   details .flashcard-answer {
     animation: flashcard-reveal 200ms ease-out;
   }
