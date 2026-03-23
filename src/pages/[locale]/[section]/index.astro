@@ -160,6 +160,7 @@ const typeCounts = TYPE_ORDER
       var collapsed = JSON.parse(localStorage.getItem('cheatsheet:collapsed:' + section) || '[]');
       if (!Array.isArray(collapsed)) return;
       collapsed.forEach(function(type) {
+        if (!/^[a-z]+$/.test(type)) return;
         var el = main.querySelector('details[data-type-group="' + type + '"]');
         if (el) el.removeAttribute('open');
       });
@@ -181,7 +182,7 @@ const typeCounts = TYPE_ORDER
       let el: HTMLElement | null = target.closest('details') || (target.tagName === 'DETAILS' ? target : null);
       while (el) {
         (el as HTMLDetailsElement).open = true;
-        el = el.parentElement?.closest('details') as HTMLElement | null ?? null;
+        el = el.parentElement?.closest('details') as HTMLElement | null;
       }
 
       // Scroll to the innermost details (the flashcard)
@@ -251,7 +252,7 @@ const typeCounts = TYPE_ORDER
         });
 
         // Update collapse-all/expand-all button label after filter changes group visibility
-        if ((window as any).__updateGroupToggleLabel) (window as any).__updateGroupToggleLabel();
+        document.dispatchEvent(new CustomEvent('groups-visibility-changed'));
       }
 
       // Tag badge click handler (event delegation on main)
@@ -325,8 +326,8 @@ const typeCounts = TYPE_ORDER
       });
     });
 
-    // Expose updateButtonLabel so the tag filter can call it after hiding/showing groups
-    (window as any).__updateGroupToggleLabel = updateButtonLabel;
+    // Listen for visibility changes from tag filter
+    document.addEventListener('groups-visibility-changed', updateButtonLabel);
 
     updateButtonLabel();
   }
