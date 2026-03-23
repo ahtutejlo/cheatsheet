@@ -103,6 +103,14 @@ const typeCounts = TYPE_ORDER
                 {tc.count} {t(locale, `group.${tc.type}` as any)}
               </span>
           ))}
+          <button
+            id="toggle-all-groups"
+            class="ml-auto text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"
+            data-collapse-label={t(locale, 'group.collapseAll')}
+            data-expand-label={t(locale, 'group.expandAll')}
+          >
+            {t(locale, 'group.collapseAll')}
+          </button>
         </div>
       )}
     </div>
@@ -243,5 +251,42 @@ const typeCounts = TYPE_ORDER
     }
 
     initTagFilter();
+  </script>
+
+  <script>
+  function initGroupToggle() {
+    const toggleBtn = document.getElementById('toggle-all-groups');
+    if (!toggleBtn) return;
+
+    const collapseLabel = toggleBtn.dataset.collapseLabel!;
+    const expandLabel = toggleBtn.dataset.expandLabel!;
+
+    function getVisibleGroups(): HTMLDetailsElement[] {
+      return Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-type-group]'))
+        .filter(el => el.style.display !== 'none');
+    }
+
+    function updateButtonLabel() {
+      const visible = getVisibleGroups();
+      const anyOpen = visible.some(el => el.open);
+      toggleBtn!.textContent = anyOpen ? collapseLabel : expandLabel;
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const visible = getVisibleGroups();
+      const anyOpen = visible.some(el => el.open);
+      visible.forEach(el => el.open = !anyOpen);
+      updateButtonLabel();
+    });
+
+    // Update label when individual groups are toggled
+    document.querySelectorAll('details[data-type-group]').forEach(el => {
+      el.addEventListener('toggle', () => updateButtonLabel());
+    });
+
+    updateButtonLabel();
+  }
+
+  initGroupToggle();
   </script>
 </BaseLayout>
