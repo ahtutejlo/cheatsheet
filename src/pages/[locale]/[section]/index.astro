@@ -5,7 +5,7 @@ import Header from '../../../components/Header.astro';
 import FlashcardList from '../../../components/FlashcardList.astro';
 import { t, localePath, type Locale, locales } from '../../../i18n/utils';
 import { getSectionMeta, getAllSectionSlugs } from '../../../i18n/sections';
-import { getSectionColor, typeDotClasses, typeTextClasses } from '../../../lib/colors';
+import { getSectionColor, typeDotClasses, typeTextClasses, typeColors } from '../../../lib/colors';
 
 export async function getStaticPaths() {
   const sectionSlugs = getAllSectionSlugs();
@@ -72,7 +72,7 @@ const typeCounts = TYPE_ORDER
   locale={locale}
 >
   <Header locale={locale} currentPath={section} />
-  <main data-pagefind-body class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+  <main data-pagefind-body data-section={section} class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <div class="mb-8" data-pagefind-ignore>
       <a href={localePath(locale)}
          class="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4 transition-colors">
@@ -103,6 +103,14 @@ const typeCounts = TYPE_ORDER
                 {tc.count} {t(locale, `group.${tc.type}` as any)}
               </span>
           ))}
+          <button
+            id="toggle-all-groups"
+            class="ml-auto text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"
+            data-collapse-label={t(locale, 'group.collapseAll')}
+            data-expand-label={t(locale, 'group.expandAll')}
+          >
+            {t(locale, 'group.collapseAll')}
+          </button>
         </div>
       )}
     </div>
@@ -119,20 +127,46 @@ const typeCounts = TYPE_ORDER
       </button>
     </div>
     {grouped.map((group, index) => (
-      <div data-type-group={group.type}>
-        {grouped.length > 1 && (
-          <div data-pagefind-ignore class:list={['flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700', index === 0 ? 'pt-0' : 'pt-8']}>
+      grouped.length > 1 ? (
+        <details open data-type-group={group.type} class:list={['group/typegroup', index === 0 ? '' : 'pt-8']}>
+          <summary data-pagefind-ignore class="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700 cursor-pointer select-none list-none">
+            <svg class:list={['w-5 h-5 transition-transform duration-200 group-open/typegroup:rotate-180 shrink-0', typeColors[group.type].chevron]}
+                 viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd" />
+            </svg>
             <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {t(locale, `group.${group.type}` as any)}
             </h2>
             <span class="text-sm text-gray-500 dark:text-gray-400">({group.questions.length})</span>
+          </summary>
+          <div class="mt-4">
+            <FlashcardList questions={group.questions} locale={locale} />
           </div>
-        )}
-        <div class={grouped.length > 1 ? 'mt-4' : ''}>
+        </details>
+      ) : (
+        <div data-type-group={group.type}>
           <FlashcardList questions={group.questions} locale={locale} />
         </div>
-      </div>
+      )
     ))}
+  <script is:inline>
+  (function() {
+    var main = document.querySelector('main[data-section]');
+    if (!main) return;
+    var section = main.dataset.section;
+    try {
+      var collapsed = JSON.parse(localStorage.getItem('cheatsheet:collapsed:' + section) || '[]');
+      if (!Array.isArray(collapsed)) return;
+      collapsed.forEach(function(type) {
+        if (!/^[a-z]+$/.test(type)) return;
+        var el = main.querySelector('details[data-type-group="' + type + '"]');
+        if (el) el.removeAttribute('open');
+      });
+    } catch (e) {}
+  })();
+</script>
   </main>
 
   <!-- Anchor link handler: opens and scrolls to linked question -->
@@ -144,14 +178,15 @@ const typeCounts = TYPE_ORDER
       const target = document.getElementById(hash.slice(1));
       if (!target) return;
 
-      // Open the parent details element if target is inside a flashcard
-      const details = target.closest('details') || (target.tagName === 'DETAILS' ? target : null);
-      if (details) {
-        (details as HTMLDetailsElement).open = true;
+      // Open ALL ancestor details elements (flashcard + type group)
+      let el: HTMLElement | null = target.closest('details') || (target.tagName === 'DETAILS' ? target : null);
+      while (el) {
+        (el as HTMLDetailsElement).open = true;
+        el = el.parentElement?.closest('details') as HTMLElement | null;
       }
 
-      // Scroll to target with a short delay to allow details to open
-      const scrollTarget = details || target;
+      // Scroll to the innermost details (the flashcard)
+      const scrollTarget = target.closest('details') || target;
       setTimeout(() => {
         scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
         scrollTarget.classList.add('highlight');
@@ -215,6 +250,9 @@ const typeCounts = TYPE_ORDER
           const visibleCards = group.querySelectorAll('.flashcard:not([style*="display: none"])');
           (group as HTMLElement).style.display = visibleCards.length ? '' : 'none';
         });
+
+        // Update collapse-all/expand-all button label after filter changes group visibility
+        document.dispatchEvent(new CustomEvent('groups-visibility-changed'));
       }
 
       // Tag badge click handler (event delegation on main)
@@ -233,5 +271,67 @@ const typeCounts = TYPE_ORDER
     }
 
     initTagFilter();
+  </script>
+
+  <script>
+  function initGroupToggle() {
+    const toggleBtn = document.getElementById('toggle-all-groups');
+    const main = document.querySelector<HTMLElement>('main[data-section]');
+    if (!main) return;
+
+    const section = main.dataset.section!;
+    const storageKey = `cheatsheet:collapsed:${section}`;
+
+    function getVisibleGroups(): HTMLDetailsElement[] {
+      return Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-type-group]'))
+        .filter(el => el.style.display !== 'none');
+    }
+
+    function saveState() {
+      const all = document.querySelectorAll<HTMLDetailsElement>('details[data-type-group]');
+      const collapsed = Array.from(all)
+        .filter(el => !el.open)
+        .map(el => el.dataset.typeGroup!);
+      try {
+        if (collapsed.length === 0) {
+          localStorage.removeItem(storageKey);
+        } else {
+          localStorage.setItem(storageKey, JSON.stringify(collapsed));
+        }
+      } catch (e) {}
+    }
+
+    function updateButtonLabel() {
+      if (!toggleBtn) return;
+      const visible = getVisibleGroups();
+      const anyOpen = visible.some(el => el.open);
+      toggleBtn.textContent = anyOpen
+        ? toggleBtn.dataset.collapseLabel!
+        : toggleBtn.dataset.expandLabel!;
+    }
+
+    toggleBtn?.addEventListener('click', () => {
+      const visible = getVisibleGroups();
+      const anyOpen = visible.some(el => el.open);
+      visible.forEach(el => el.open = !anyOpen);
+      saveState();
+      updateButtonLabel();
+    });
+
+    // Update label and persist when individual groups are toggled
+    document.querySelectorAll('details[data-type-group]').forEach(el => {
+      el.addEventListener('toggle', () => {
+        saveState();
+        updateButtonLabel();
+      });
+    });
+
+    // Listen for visibility changes from tag filter
+    document.addEventListener('groups-visibility-changed', updateButtonLabel);
+
+    updateButtonLabel();
+  }
+
+  initGroupToggle();
   </script>
 </BaseLayout>

@@ -26,6 +26,8 @@ export const ui = {
     'search.noResults': 'Нічого не знайдено',
     'filter.showAll': 'Показати всі',
     'filter.activeLabel': 'Фільтр',
+    'group.collapseAll': 'Згорнути всі',
+    'group.expandAll': 'Розгорнути всі',
   },
   en: {
     'site.title': 'Interview Cheatsheet',
@@ -54,6 +56,8 @@ export const ui = {
     'search.noResults': 'No results found',
     'filter.showAll': 'Show all',
     'filter.activeLabel': 'Filtered by',
+    'group.collapseAll': 'Collapse all',
+    'group.expandAll': 'Expand all',
   },
 } as const;
 
