@@ -72,7 +72,7 @@ const typeCounts = TYPE_ORDER
   locale={locale}
 >
   <Header locale={locale} currentPath={section} />
-  <main data-pagefind-body class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+  <main data-pagefind-body data-section={section} class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
     <div class="mb-8" data-pagefind-ignore>
       <a href={localePath(locale)}
          class="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mb-4 transition-colors">
@@ -151,6 +151,21 @@ const typeCounts = TYPE_ORDER
         </div>
       )
     ))}
+  <script is:inline>
+  (function() {
+    var main = document.querySelector('main[data-section]');
+    if (!main) return;
+    var section = main.dataset.section;
+    try {
+      var collapsed = JSON.parse(localStorage.getItem('cheatsheet:collapsed:' + section) || '[]');
+      if (!Array.isArray(collapsed)) return;
+      collapsed.forEach(function(type) {
+        var el = main.querySelector('details[data-type-group="' + type + '"]');
+        if (el) el.removeAttribute('open');
+      });
+    } catch (e) {}
+  })();
+</script>
   </main>
 
   <!-- Anchor link handler: opens and scrolls to linked question -->
@@ -233,6 +248,9 @@ const typeCounts = TYPE_ORDER
           const visibleCards = group.querySelectorAll('.flashcard:not([style*="display: none"])');
           (group as HTMLElement).style.display = visibleCards.length ? '' : 'none';
         });
+
+        // Update collapse-all/expand-all button label after filter changes group visibility
+        if ((window as any).__updateGroupToggleLabel) (window as any).__updateGroupToggleLabel();
       }
 
       // Tag badge click handler (event delegation on main)
@@ -256,33 +274,58 @@ const typeCounts = TYPE_ORDER
   <script>
   function initGroupToggle() {
     const toggleBtn = document.getElementById('toggle-all-groups');
-    if (!toggleBtn) return;
+    const main = document.querySelector<HTMLElement>('main[data-section]');
+    if (!main) return;
 
-    const collapseLabel = toggleBtn.dataset.collapseLabel!;
-    const expandLabel = toggleBtn.dataset.expandLabel!;
+    const section = main.dataset.section!;
+    const storageKey = `cheatsheet:collapsed:${section}`;
 
     function getVisibleGroups(): HTMLDetailsElement[] {
       return Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-type-group]'))
         .filter(el => el.style.display !== 'none');
     }
 
-    function updateButtonLabel() {
-      const visible = getVisibleGroups();
-      const anyOpen = visible.some(el => el.open);
-      toggleBtn!.textContent = anyOpen ? collapseLabel : expandLabel;
+    function saveState() {
+      const all = document.querySelectorAll<HTMLDetailsElement>('details[data-type-group]');
+      const collapsed = Array.from(all)
+        .filter(el => !el.open)
+        .map(el => el.dataset.typeGroup!);
+      try {
+        if (collapsed.length === 0) {
+          localStorage.removeItem(storageKey);
+        } else {
+          localStorage.setItem(storageKey, JSON.stringify(collapsed));
+        }
+      } catch (e) {}
     }
 
-    toggleBtn.addEventListener('click', () => {
+    function updateButtonLabel() {
+      if (!toggleBtn) return;
+      const visible = getVisibleGroups();
+      const anyOpen = visible.some(el => el.open);
+      toggleBtn.textContent = anyOpen
+        ? toggleBtn.dataset.collapseLabel!
+        : toggleBtn.dataset.expandLabel!;
+    }
+
+    toggleBtn?.addEventListener('click', () => {
       const visible = getVisibleGroups();
       const anyOpen = visible.some(el => el.open);
       visible.forEach(el => el.open = !anyOpen);
+      saveState();
       updateButtonLabel();
     });
 
-    // Update label when individual groups are toggled
+    // Update label and persist when individual groups are toggled
     document.querySelectorAll('details[data-type-group]').forEach(el => {
-      el.addEventListener('toggle', () => updateButtonLabel());
+      el.addEventListener('toggle', () => {
+        saveState();
+        updateButtonLabel();
+      });
     });
+
+    // Expose updateButtonLabel so the tag filter can call it after hiding/showing groups
+    (window as any).__updateGroupToggleLabel = updateButtonLabel;
 
     updateButtonLabel();
   }
