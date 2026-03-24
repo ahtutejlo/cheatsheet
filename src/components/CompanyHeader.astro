@@ -1,5 +1,5 @@
 ---
-import { t, type Locale } from '../i18n/utils';
+import { t, getLocalized, type Locale } from '../i18n/utils';
 import { getStageColor } from '../lib/colors';
 
 interface Stage {
@@ -23,7 +23,6 @@ interface Props {
 
 const { name, type, region, difficulty, duration, stages, tags, tips, questionCount, locale } = Astro.props;
 const initial = name.charAt(0).toUpperCase();
-const stageNameKey = `${locale}_name` as const;
 ---
 <div class="bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-[14px] p-5 sm:p-6 mb-8">
   <!-- Company name and meta -->
@@ -52,8 +51,9 @@ const stageNameKey = `${locale}_name` as const;
             class="rounded-lg px-3 py-2 text-center shrink-0 min-w-0"
             style={`background: ${getStageColor(i)}10; border: 1px solid ${getStageColor(i)}30;`}
           >
+            {/* 8-digit hex: color + 10/30 opacity suffix */}
             <p class="text-[11px] font-semibold truncate" style={`color: ${getStageColor(i)};`}>
-              {(stage as any)[stageNameKey]}
+              {getLocalized(stage, locale, 'name')}
             </p>
             <p class="text-[10px] text-gray-400 dark:text-gray-500">{stage.duration}</p>
           </div>

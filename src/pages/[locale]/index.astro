@@ -4,7 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import SectionCard from '../../components/SectionCard.astro';
 import CompanyCard from '../../components/CompanyCard.astro';
-import { t, type Locale, locales } from '../../i18n/utils';
+import { t, getLocalized, type Locale, locales } from '../../i18n/utils';
 import { getAllSectionSlugs } from '../../i18n/sections';
 
 export function getStaticPaths() {
@@ -33,12 +33,10 @@ const allCompanyQuestions = await getCollection('companyQuestions');
 
 const companyData = allCompanies.map(c => {
   const questionCount = allCompanyQuestions.filter(q => q.data.company === c.data.slug).length;
-  const nameKey = `${locale}_name` as const;
-  const descKey = `${locale}_description` as const;
   return {
     slug: c.data.slug,
-    name: (c.data as any)[nameKey] as string,
-    description: (c.data as any)[descKey] as string,
+    name: getLocalized(c.data, locale, 'name'),
+    description: getLocalized(c.data, locale, 'description'),
     type: c.data.type,
     region: c.data.region,
     difficulty: c.data.difficulty,

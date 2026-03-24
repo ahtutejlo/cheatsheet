@@ -11,16 +11,18 @@ interface Props {
   type?: QuestionType;
   locale: 'ua' | 'en';
   tags?: string[];
+  borderColorClass?: string;
 }
 
-const { slug, question, answer, type = 'basic', locale, tags = [] } = Astro.props;
+const { slug, question, answer, type = 'basic', locale, tags = [], borderColorClass } = Astro.props;
 const answerHtml = await renderMarkdown(answer);
 const colors = typeColors[type];
+const borderLeft = borderColorClass ?? colors.borderLeft;
 ---
 <details
   class:list={[
     'flashcard group overflow-hidden rounded-xl border-l-4',
-    'border border-gray-200 dark:border-gray-700', colors.borderLeft, 'shadow-sm',
+    'border border-gray-200 dark:border-gray-700', borderLeft, 'shadow-sm',
   ]}
   data-tags={tags.join(',')}
 >

@@ -3,8 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import Header from '../../../../components/Header.astro';
 import CompanyHeader from '../../../../components/CompanyHeader.astro';
-import FlashcardList from '../../../../components/FlashcardList.astro';
-import { t, localePath, type Locale, locales } from '../../../../i18n/utils';
+import Flashcard from '../../../../components/Flashcard.astro';
+import { t, localePath, getLocalized, getLocalizedArray, type Locale, locales } from '../../../../i18n/utils';
 import { getStageColor, getStageBorderClass } from '../../../../lib/colors';
 
 export async function getStaticPaths() {
@@ -21,34 +21,21 @@ const { locale, company } = Astro.params as { locale: Locale; company: string };
 const { companyData } = Astro.props;
 const data = companyData.data;
 
-const nameKey = `${locale}_name` as const;
-const descKey = `${locale}_description` as const;
-const tipsKey = `${locale}_tips` as const;
-const companyName = (data as any)[nameKey] as string;
-const companyTips = (data as any)[tipsKey] as string[];
+const companyName = getLocalized(data, locale, 'name');
+const companyDescription = getLocalized(data, locale, 'description');
+const companyTips = getLocalizedArray(data, locale, 'tips');
 
 const allCompanyQuestions = await getCollection('companyQuestions');
 const questions = allCompanyQuestions
   .filter(q => q.data.company === company)
   .sort((a, b) => a.data.order - b.data.order);
 
-const questionKey = `${locale}_question` as const;
-const answerKey = `${locale}_answer` as const;
-
-// Build stage slug -> index map for colors
-const stageIndexMap = new Map<string, number>();
-data.stages.forEach((stage: any, i: number) => {
-  const slug = stage.en_name.toLowerCase().replace(/\s+/g, '-');
-  stageIndexMap.set(slug, i);
-});
-
 // Group questions by stage
-const stageNameKey = `${locale}_name` as const;
 const grouped = data.stages
-  .map((stage: any, i: number) => {
+  .map((stage: { ua_name: string; en_name: string; duration: string }, i: number) => {
     const stageSlug = stage.en_name.toLowerCase().replace(/\s+/g, '-');
     return {
-      stageName: stage[stageNameKey] as string,
+      stageName: getLocalized(stage, locale, 'name'),
       stageIndex: i,
       stageSlug,
       questions: questions
@@ -57,8 +44,8 @@ const grouped = data.stages
           const slug = q.id.split('/').pop()?.replace('.md', '') || q.id;
           return {
             slug,
-            question: (q.data as any)[questionKey] as string,
-            answer: (q.data as any)[answerKey] as string,
+            question: getLocalized(q.data, locale, 'question'),
+            answer: getLocalized(q.data, locale, 'answer'),
             tags: q.data.tags || [],
           };
         }),
@@ -68,7 +55,7 @@ const grouped = data.stages
 ---
 <BaseLayout
   title={`${companyName} - ${t(locale, 'site.title')}`}
-  description={(data as any)[descKey]}
+  description={companyDescription}
   locale={locale}
 >
   <Header locale={locale} currentPath={`company/${company}`} />
@@ -117,49 +104,14 @@ const grouped = data.stages
         </div>
         <div class="flex flex-col gap-3">
           {group.questions.map(q => (
-            <details
-              class:list={[
-                'flashcard group overflow-hidden rounded-xl border-l-4',
-                'border border-gray-200 dark:border-gray-700',
-                getStageBorderClass(group.stageIndex),
-                'shadow-sm',
-              ]}
-              data-tags={q.tags.join(',')}
-            >
-              <summary class="cursor-pointer select-none p-4 sm:p-5 font-medium text-gray-900 dark:text-gray-100
-                             hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors
-                             min-h-[44px] flex items-center gap-3 list-none">
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-3">
-                    <h3 class="flex-1 text-base leading-relaxed font-medium">{q.question}</h3>
-                    <svg class:list={['w-5 h-5 transition-transform duration-200 group-open:rotate-180 shrink-0 text-gray-400']}
-                         viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd"
-                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                            clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                  {q.tags.length > 0 && (
-                    <div class="flex flex-wrap gap-1.5 mt-2">
-                      {q.tags.map(tag => (
-                        <span class="text-[10px] bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </summary>
-              <div class:list={[
-                'flashcard-answer border-t p-4 sm:p-5',
-                'prose prose-sm sm:prose-base max-w-none dark:prose-invert',
-                'prose-pre:rounded-lg prose-pre:text-sm',
-                'prose-code:before:content-none prose-code:after:content-none',
-                'border-gray-200 dark:border-gray-700',
-              ]}>
-                <Fragment set:html={await import('../../../../lib/markdown').then(m => m.renderMarkdown(q.answer))} />
-              </div>
-            </details>
+            <Flashcard
+              slug={q.slug}
+              question={q.question}
+              answer={q.answer}
+              locale={locale}
+              tags={q.tags}
+              borderColorClass={getStageBorderClass(group.stageIndex)}
+            />
           ))}
         </div>
       </div>
