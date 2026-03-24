@@ -125,3 +125,7 @@ Follow existing section-specific conventions:
 3. **Code examples are identical in both languages.** Do not translate variable names, comments in code, or class names.
 4. **Explanatory text is translated, not transliterated.** Use natural Ukrainian phrasing, not word-for-word transliteration from English.
 5. **Technical terms** may remain in English when that is the standard in Ukrainian tech discourse (e.g., "Docker", "Kubernetes", "JVM"), but explanations around them should be in Ukrainian.
+
+## Company Content
+
+For adding company interview profiles and company-specific questions, see [AGENTS.md](./AGENTS.md).
