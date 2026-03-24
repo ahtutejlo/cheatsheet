@@ -52,7 +52,7 @@ Each question is a separate markdown file. This structure enables AI agents to c
 Frontmatter schema:
 ```yaml
 company: string           # must match a company slug
-stage: string             # matches a stage from the company's stages list
+stage: string             # kebab-case slug derived from en_name of a stage (e.g. "technical-interview")
 ua_question: string
 en_question: string
 ua_answer: string         # markdown, block scalar
