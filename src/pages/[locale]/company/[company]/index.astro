@@ -1,0 +1,120 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Header from '../../../../components/Header.astro';
+import CompanyHeader from '../../../../components/CompanyHeader.astro';
+import Flashcard from '../../../../components/Flashcard.astro';
+import { t, localePath, getLocalized, getLocalizedArray, type Locale, locales } from '../../../../i18n/utils';
+import { getStageColor, getStageBorderClass } from '../../../../lib/colors';
+
+export async function getStaticPaths() {
+  const companies = await getCollection('companies');
+  return locales.flatMap(locale =>
+    companies.map(c => ({
+      params: { locale, company: c.data.slug },
+      props: { companyData: c },
+    }))
+  );
+}
+
+const { locale, company } = Astro.params as { locale: Locale; company: string };
+const { companyData } = Astro.props;
+const data = companyData.data;
+
+const companyName = getLocalized(data, locale, 'name');
+const companyDescription = getLocalized(data, locale, 'description');
+const companyTips = getLocalizedArray(data, locale, 'tips');
+
+const allCompanyQuestions = await getCollection('companyQuestions');
+const questions = allCompanyQuestions
+  .filter(q => q.data.company === company)
+  .sort((a, b) => a.data.order - b.data.order);
+
+// Group questions by stage
+const grouped = data.stages
+  .map((stage: { ua_name: string; en_name: string; duration: string }, i: number) => {
+    const stageSlug = stage.en_name.toLowerCase().replace(/\s+/g, '-');
+    return {
+      stageName: getLocalized(stage, locale, 'name'),
+      stageIndex: i,
+      stageSlug,
+      questions: questions
+        .filter(q => q.data.stage === stageSlug)
+        .map(q => {
+          const slug = q.id.split('/').pop()?.replace('.md', '') || q.id;
+          return {
+            slug,
+            question: getLocalized(q.data, locale, 'question'),
+            answer: getLocalized(q.data, locale, 'answer'),
+            tags: q.data.tags || [],
+          };
+        }),
+    };
+  })
+  .filter(g => g.questions.length > 0);
+---
+<BaseLayout
+  title={`${companyName} - ${t(locale, 'site.title')}`}
+  description={companyDescription}
+  locale={locale}
+>
+  <Header locale={locale} currentPath={`company/${company}`} />
+  <main data-pagefind-body class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <div class="mb-4" data-pagefind-ignore>
+      <a href={`${localePath(locale)}#companies`}
+         class="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        {t(locale, 'company.back')}
+      </a>
+    </div>
+
+    <CompanyHeader
+      name={companyName}
+      type={data.type}
+      region={data.region}
+      difficulty={data.difficulty}
+      duration={data.duration}
+      stages={data.stages}
+      tags={data.tags}
+      tips={companyTips}
+      questionCount={questions.length}
+      locale={locale}
+    />
+
+    {grouped.length > 0 && (
+      <div data-pagefind-ignore class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          {t(locale, 'company.questions_title')}
+        </h2>
+      </div>
+    )}
+
+    {grouped.map(group => (
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3" data-pagefind-ignore>
+          <span
+            class="w-1.5 h-1.5 rounded-full"
+            style={`background: ${getStageColor(group.stageIndex)};`}
+          ></span>
+          <h3 class="text-sm font-semibold" style={`color: ${getStageColor(group.stageIndex)};`}>
+            {group.stageName}
+          </h3>
+        </div>
+        <div class="flex flex-col gap-3">
+          {group.questions.map(q => (
+            <Flashcard
+              slug={q.slug}
+              question={q.question}
+              answer={q.answer}
+              locale={locale}
+              tags={q.tags}
+              borderColorClass={getStageBorderClass(group.stageIndex)}
+            />
+          ))}
+        </div>
+      </div>
+    ))}
+  </main>
+</BaseLayout>

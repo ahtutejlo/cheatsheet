@@ -6,12 +6,14 @@ A static flashcard site for technical interview preparation. Browse bilingual qu
 
 ## Features
 
-- **10 sections** — QA, Automation QA, Python, Playwright, Performance Testing, Java, Docker, Kubernetes, Blockchain, SQL
+- **10 question sections** — QA, Automation QA, Python, Playwright, Performance Testing, Java, Docker, Kubernetes, Blockchain, SQL
+- **Company interview profiles** — real interview processes, tips, and questions from candidates
 - **Click-to-reveal flashcards** — smooth animation, anchor links for sharing individual questions
 - **Bilingual** — Ukrainian and English with a one-click language toggle
 - **Dark/light mode** — system preference detection, manual toggle, no flash on load
 - **Syntax highlighting** — dual-theme code blocks via Shiki
 - **Responsive** — works on mobile (320px+)
+- **AI-friendly** — structured content format for AI agent contributions (see AGENTS.md)
 - **No backend** — fully static, hosted on GitHub Pages
 
 ## Tech Stack
@@ -48,17 +50,23 @@ tags: ["basics"]
 
 Push to `main` and the site rebuilds automatically.
 
+### Adding Company Profiles
+
+Company data lives in `src/content/companies/` and questions in `src/content/company-questions/<company>/`. See [AGENTS.md](./AGENTS.md) for the full schema.
+
 ## Project Structure
 
 ```
 src/
-├── components/     # Header, SectionCard, Flashcard, FlashcardList
+├── components/     # Header, SectionCard, CompanyCard, CompanyHeader, Flashcard
 ├── content/
-│   └── questions/  # Markdown files across 10 sections
+│   ├── questions/          # Flashcards across 10 tech sections
+│   ├── companies/          # Company interview profiles
+│   └── company-questions/  # Interview questions per company
 ├── i18n/           # UI translations, section metadata, utilities
 ├── layouts/        # BaseLayout
-├── lib/            # Markdown renderer with Shiki
-├── pages/          # Locale-based routing ([locale]/[section]/)
+├── lib/            # Markdown renderer with Shiki, color utilities
+├── pages/          # Locale-based routing ([locale]/[section]/, [locale]/company/[slug]/)
 └── styles/         # Global CSS with Tailwind
 ```
 

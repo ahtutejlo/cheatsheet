@@ -3,7 +3,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import SectionCard from '../../components/SectionCard.astro';
-import { t, type Locale, locales } from '../../i18n/utils';
+import CompanyCard from '../../components/CompanyCard.astro';
+import { t, getLocalized, type Locale, locales } from '../../i18n/utils';
 import { getAllSectionSlugs } from '../../i18n/sections';
 
 export function getStaticPaths() {
@@ -25,18 +26,127 @@ const sectionData = sectionSlugs.map(slug => {
 
   return { slug, count: questions.length, typeCounts };
 });
+
+// Companies data
+const allCompanies = await getCollection('companies');
+const allCompanyQuestions = await getCollection('companyQuestions');
+
+const companyData = allCompanies.map(c => {
+  const questionCount = allCompanyQuestions.filter(q => q.data.company === c.data.slug).length;
+  return {
+    slug: c.data.slug,
+    name: getLocalized(c.data, locale, 'name'),
+    description: getLocalized(c.data, locale, 'description'),
+    type: c.data.type,
+    region: c.data.region,
+    difficulty: c.data.difficulty,
+    duration: c.data.duration,
+    stageCount: c.data.stages.length,
+    tags: c.data.tags,
+    questionCount,
+  };
+});
 ---
 <BaseLayout title={t(locale, 'site.title')} description={t(locale, 'site.description')} locale={locale}>
   <Header locale={locale} />
   <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
-    <div class="mb-8">
+    <div class="mb-6">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">{t(locale, 'home.title')}</h1>
       <p class="mt-2 text-gray-600 dark:text-gray-400">{t(locale, 'home.subtitle')}</p>
     </div>
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {sectionData.map(({ slug, count, typeCounts }) => (
-        <SectionCard slug={slug} count={count} typeCounts={typeCounts} locale={locale} />
-      ))}
+
+    <!-- Tab Switcher -->
+    <div class="flex border-b-2 border-gray-200 dark:border-gray-700 mb-6">
+      <button
+        id="tab-questions"
+        class="tab-btn px-5 py-2.5 text-sm font-semibold text-blue-600 dark:text-blue-400 border-b-2 border-blue-500 -mb-[2px] transition-colors"
+        data-tab="questions"
+      >
+        📝 {t(locale, 'tab.questions')}
+      </button>
+      <button
+        id="tab-companies"
+        class="tab-btn px-5 py-2.5 text-sm font-medium text-gray-400 dark:text-gray-500 border-b-2 border-transparent -mb-[2px] transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+        data-tab="companies"
+      >
+        🏢 {t(locale, 'tab.companies')}
+      </button>
+    </div>
+
+    <!-- Questions Grid -->
+    <div id="panel-questions" class="tab-panel">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {sectionData.map(({ slug, count, typeCounts }) => (
+          <SectionCard slug={slug} count={count} typeCounts={typeCounts} locale={locale} />
+        ))}
+      </div>
+    </div>
+
+    <!-- Companies Grid -->
+    <div id="panel-companies" class="tab-panel hidden">
+      {companyData.length > 0 ? (
+        <div class="grid gap-4 sm:grid-cols-2">
+          {companyData.map(company => (
+            <CompanyCard {...company} locale={locale} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <p class="text-lg font-semibold text-gray-500 dark:text-gray-400">{t(locale, 'company.empty.title')}</p>
+          <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">{t(locale, 'company.empty.body')}</p>
+        </div>
+      )}
     </div>
   </main>
+
+  <script is:inline>
+  (function() {
+    var tabs = document.querySelectorAll('.tab-btn');
+    var panels = document.querySelectorAll('.tab-panel');
+
+    function activate(tabName) {
+      tabs.forEach(function(btn) {
+        var isActive = btn.dataset.tab === tabName;
+        btn.classList.toggle('text-blue-600', isActive);
+        btn.classList.toggle('dark:text-blue-400', isActive);
+        btn.classList.toggle('border-blue-500', isActive);
+        btn.classList.toggle('font-semibold', isActive);
+        btn.classList.toggle('text-gray-400', !isActive);
+        btn.classList.toggle('dark:text-gray-500', !isActive);
+        btn.classList.toggle('border-transparent', !isActive);
+        btn.classList.toggle('font-medium', !isActive);
+      });
+      panels.forEach(function(panel) {
+        var panelTab = panel.id.replace('panel-', '');
+        panel.classList.toggle('hidden', panelTab !== tabName);
+      });
+      try { localStorage.setItem('cheatsheet:tab', tabName); } catch(e) {}
+    }
+
+    tabs.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var tab = btn.dataset.tab;
+        activate(tab);
+        history.replaceState(null, '', tab === 'questions' ? location.pathname : '#companies');
+      });
+    });
+
+    // Restore from hash or localStorage
+    var hash = location.hash.replace('#', '');
+    if (hash === 'companies') {
+      activate('companies');
+    } else {
+      try {
+        var saved = localStorage.getItem('cheatsheet:tab');
+        if (saved === 'companies' && !hash) activate('companies');
+      } catch(e) {}
+    }
+
+    window.addEventListener('hashchange', function() {
+      var h = location.hash.replace('#', '');
+      if (h === 'companies') activate('companies');
+      else activate('questions');
+    });
+  })();
+  </script>
 </BaseLayout>

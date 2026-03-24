@@ -87,3 +87,28 @@ const sectionColorMap: Record<string, SectionColor> = {
 export function getSectionColor(slug: string): SectionColor {
   return sectionColorMap[slug] ?? defaultSectionColor;
 }
+
+// --- Company colors ---
+export const defaultCompanyColor: SectionColor = {
+  gradientFrom: '#f1f5f9',
+  gradientTo: '#e2e8f0',
+};
+
+// --- Stage colors (cycle for interview stages) ---
+const stagePalette = ['#3b82f6', '#22c55e', '#8b5cf6', '#f59e0b', '#ec4899', '#06b6d4'];
+
+export function getStageColor(index: number): string {
+  return stagePalette[index % stagePalette.length];
+}
+
+export function getStageBorderClass(index: number): string {
+  const classes = [
+    'border-l-blue-500',
+    'border-l-green-500',
+    'border-l-purple-500',
+    'border-l-amber-500',
+    'border-l-pink-500',
+    'border-l-cyan-500',
+  ];
+  return classes[index % classes.length];
+}
