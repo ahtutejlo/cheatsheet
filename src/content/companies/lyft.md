@@ -1,0 +1,37 @@
+---
+slug: "lyft"
+ua_name: "Lyft"
+en_name: "Lyft"
+type: "product"
+region: "usa"
+ua_description: "Американська технологічна компанія, один з найбільших сервісів райдшерінгу. Базується в Сан-Франциско, працює на ринку США та Канади. Інженерна культура з фокусом на якість, integrity та diversity."
+en_description: "American technology company, one of the largest ridesharing services. Based in San Francisco, operating in the US and Canada. Engineering culture focused on quality, integrity, and diversity."
+difficulty: "hard"
+duration: "3-4 weeks"
+stages:
+  - ua_name: "Live Coding"
+    en_name: "Live Coding"
+    duration: "60m"
+  - ua_name: "Теорія тестування (System Design)"
+    en_name: "Testing Theory (System Design)"
+    duration: "60m"
+  - ua_name: "Побудова фреймворку з нуля"
+    en_name: "Build Framework from Scratch"
+    duration: "90m"
+  - ua_name: "Інтерв'ю з Engineering Director"
+    en_name: "Engineering Director Interview"
+    duration: "60m"
+tags: [testing, automation, frameworks, python, java, api]
+ua_tips:
+  - "Live coding — прості задачі на масиви та алгоритми, без складних структур даних. Потренуйся на easy/medium LeetCode"
+  - "System Design етап — це НЕ класичний system design, а теорія тестування. Повтори піраміду тестування, типи тестів, стратегії"
+  - "Побудова фреймворку — дають вибір: mobile, UI, API. Обирай те, де ти найсильніший. Потрібно написати ~10 тестів різної складності"
+  - "Підготуй відповіді на питання про integrity та diversity — це важлива частина культурного інтерв'ю з директором"
+  - "Будь готовий розповісти про свій досвід структуровано — використовуй STAR формат"
+en_tips:
+  - "Live coding — simple array and algorithm problems, no complex data structures. Practice easy/medium LeetCode"
+  - "System Design stage is NOT classical system design — it's testing theory. Review test pyramid, test types, strategies"
+  - "Framework building — you choose: mobile, UI, or API. Pick your strongest area. Need to write ~10 tests of varying complexity"
+  - "Prepare answers about integrity and diversity — this is an important part of the cultural interview with the director"
+  - "Be ready to describe your experience in a structured way — use the STAR format"
+---
