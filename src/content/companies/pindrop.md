@@ -1,0 +1,38 @@
+---
+slug: "pindrop"
+ua_name: "Pindrop"
+en_name: "Pindrop"
+type: "product"
+region: "usa"
+ua_description: "Американський стартап у сфері голосової безпеки та аутентифікації. Базується в Атланті. Внутрішня команда розробників будує тестовий фреймворк для всіх команд компанії — роль передбачає вирішення внутрішніх інфраструктурних задач якості."
+en_description: "American startup in voice security and authentication. Based in Atlanta. Internal developer team builds a testing framework for all company teams — the role involves solving internal quality infrastructure tasks."
+difficulty: "hard"
+duration: "3-4 weeks"
+stages:
+  - ua_name: "Інтерв'ю з VP Engineering Ukraine"
+    en_name: "VP Engineering Ukraine Interview"
+    duration: "45-60m"
+  - ua_name: "Теорія тестування"
+    en_name: "Testing Theory"
+    duration: "60m"
+  - ua_name: "Live Coding (CoderPad)"
+    en_name: "Live Coding (CoderPad)"
+    duration: "60m"
+  - ua_name: "Інтерв'ю з Team Manager"
+    en_name: "Team Manager Interview"
+    duration: "45m"
+  - ua_name: "Інтерв'ю з VP Engineering (Global)"
+    en_name: "VP Engineering (Global) Interview"
+    duration: "45-60m"
+tags: [testing, automation, frameworks, internal-tools, voice-security]
+ua_tips:
+  - "Перший етап — класичне 'хто ти, що ти'. Підготуй чіткий elevator pitch про свій досвід і чому саме ця роль"
+  - "Теорія тестування — фокус на тому, як ти підходиш до задач: стратегія, пріоритизація, підходи до фреймворків"
+  - "Live coding на CoderPad — задачі на масиви (steps/intervals) та цикли. Рівень easy/medium, але треба думати вголос"
+  - "Team Manager і VP Global — поведінкові питання про командну роботу та технічне лідерство. Використовуй STAR"
+en_tips:
+  - "First stage — classic 'who are you' pitch. Prepare a concise elevator pitch about your experience and why this role"
+  - "Testing theory — focus on your approach: strategy, prioritization, framework design thinking"
+  - "Live coding on CoderPad — array problems (steps/intervals) and loops. Easy/medium level but think out loud"
+  - "Team Manager and Global VP — behavioral questions about teamwork and technical leadership. Use STAR format"
+---
