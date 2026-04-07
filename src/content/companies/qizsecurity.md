@@ -9,16 +9,21 @@ en_description: "Product company in the cybersecurity space"
 difficulty: "medium"
 duration: "1 week"
 stages:
-  - ua_name: "Технічний собєс"
-    en_name: "Technical Interview"
+  - ua_name: "Технічний собєс 1"
+    en_name: "Technical Interview 1"
     duration: "1h"
-tags: [algorithms, tree-traversal, dfs]
+  - ua_name: "Технічний собєс 2 — System Design + Testing"
+    en_name: "Technical Interview 2 — System Design + Testing"
+    duration: "1h"
+tags: [algorithms, tree-traversal, dfs, testing, concurrency, postgres]
 ua_tips:
   - "VP R&D проводить технічний собєс особисто"
-  - "Питають класичні алго задачі — DFS/BFS на деревах"
-  - "Питання про досвід + псевдокод"
+  - "Етап 1: класичні алго задачі — DFS/BFS на деревах, питання про досвід"
+  - "Етап 2: огляд реальної системи + тест-кейси (scan superseding logic, конкурентність)"
+  - "Фокус на розумінні concurrency — SELECT FOR UPDATE SKIP LOCKED"
 en_tips:
   - "VP R&D conducts the technical interview personally"
-  - "Classic algorithm tasks — DFS/BFS on trees"
-  - "Experience questions + pseudocode"
+  - "Stage 1: classic algorithm tasks — DFS/BFS on trees, experience questions"
+  - "Stage 2: real system review + test case design (scan superseding logic, concurrency)"
+  - "Focus on understanding concurrency — SELECT FOR UPDATE SKIP LOCKED"
 ---
