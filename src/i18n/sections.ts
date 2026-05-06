@@ -47,6 +47,18 @@ export const sections: Record<string, Record<Locale, SectionMeta>> = {
     ua: { name: 'SQL', description: 'Мова запитів до баз даних', icon: '🗃️' },
     en: { name: 'SQL', description: 'Database query language', icon: '🗃️' },
   },
+  devops: {
+    ua: { name: 'DevOps', description: 'Хмари, CI/CD, спостережуваність та надійність', icon: '⚙️' },
+    en: { name: 'DevOps', description: 'Cloud, CI/CD, observability and reliability', icon: '⚙️' },
+  },
+  mongodb: {
+    ua: { name: 'MongoDB', description: 'Документна база даних та її тестування', icon: '🍃' },
+    en: { name: 'MongoDB', description: 'Document database and its testing', icon: '🍃' },
+  },
+  'llm-testing': {
+    ua: { name: 'LLM Testing', description: 'Тестування LLM/AI продуктів і пайплайнів', icon: '🤖' },
+    en: { name: 'LLM Testing', description: 'Testing LLM/AI features and pipelines', icon: '🤖' },
+  },
 };
 
 export function getSectionMeta(slug: string, locale: Locale): SectionMeta | undefined {

@@ -82,6 +82,9 @@ const sectionColorMap: Record<string, SectionColor> = {
   kubernetes:            { gradientFrom: '#eef2ff', gradientTo: '#c7d2fe' },
   blockchain:            { gradientFrom: '#ecfdf5', gradientTo: '#a7f3d0' },
   sql:                   { gradientFrom: '#fefce8', gradientTo: '#fef08a' },
+  devops:                { gradientFrom: '#fef3c7', gradientTo: '#fde68a' },
+  mongodb:               { gradientFrom: '#dcfce7', gradientTo: '#86efac' },
+  'llm-testing':         { gradientFrom: '#fae8ff', gradientTo: '#e9d5ff' },
 };
 
 export function getSectionColor(slug: string): SectionColor {
